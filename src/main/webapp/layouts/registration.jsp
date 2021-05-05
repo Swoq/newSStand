@@ -143,7 +143,7 @@
 						<i class="fa fa-check"></i>
 					</span>
                 </div>
-                <input type="text" class="form-control" placeholder="Confirm Password" required="required">
+                <input type="text" class="form-control" name="confirmPassword" placeholder="Confirm Password" required="required">
             </div>
         </div>
         <div class="form-group">

@@ -1,4 +1,7 @@
-package controllers.filters;
+package com.swoqe.newSStand.controllers.filters;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 import javax.servlet.*;
 import javax.servlet.annotation.WebFilter;
@@ -10,12 +13,11 @@ import java.io.IOException;
 @WebFilter("/AuthenticationFilter")
 public class AuthenticationFilter implements Filter {
 
-    private ServletContext context;
+    final static Logger logger = LogManager.getLogger(AuthenticationFilter.class);
 
     @Override
     public void init(FilterConfig filterConfig) {
-        this.context = filterConfig.getServletContext();
-        this.context.log("AuthenticationFilter initialized");
+//        logger.info("AuthenticationFilter initialized");
     }
 
     @Override
@@ -24,21 +26,16 @@ public class AuthenticationFilter implements Filter {
         HttpServletResponse res = (HttpServletResponse) servletResponse;
 
         String uri = req.getRequestURI();
-        System.out.println("Requested Resource::"+uri);
+        logger.info("Requested Resource::"+uri);
 
         HttpSession session = req.getSession(false);
 
-        boolean validSession = (session != null) && (session.getAttribute("email") != null);
+        boolean validSession = (session != null) && (session.getAttribute("user") != null);
         boolean requestedAllowedURI = (uri.endsWith("/") || uri.endsWith("login") || uri.endsWith("registration")
                 || uri.startsWith("/layouts/assets") || uri.startsWith("/layouts/styles"));
 
-        if (session != null) {
-            System.out.println("Session is valid: " + validSession + session + session.getAttribute("email"));
-        }
-
-        System.out.println("Request allowed: " + requestedAllowedURI);
         if(!validSession && !requestedAllowedURI){
-            System.out.println("Unauthorized access request");
+            logger.error("Unauthorized access request");
             res.sendRedirect("/login");
         }else{
             filterChain.doFilter(req, res);

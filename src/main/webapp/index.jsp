@@ -47,14 +47,14 @@
                 <a class="blog-header-logo text-dark" href="#">NewSStand</a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
-                <c:if test="${sessionScope.email == null}">
+                <c:if test="${sessionScope.user == null}">
                     <a class="btn btn-sm btn-outline-secondary mr-1" href="${contextPath}/registration">Sign up</a>
                     <a class="btn btn-sm btn-outline-secondary" href="${contextPath}/login">Sign in</a>
                 </c:if>
-                <c:if test="${sessionScope.email != null}">
+                <c:if test="${sessionScope.user != null}">
                     <h5 class="font-italic text-dark">
-                        <c:out value="${sessionScope.email}"/>
-                        <a class="btn btn-sm btn-outline-secondary" href="${contextPath}/logout">Logout</a>
+                        <c:out value="${sessionScope.user.firstName} ${sessionScope.user.lastName}"/>
+                        <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/logout">Logout</a>
                     </h5>
                 </c:if>
 
