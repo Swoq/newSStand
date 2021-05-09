@@ -29,6 +29,6 @@ public class LogoutServlet extends HttpServlet {
             logger.info("User="+session.getAttribute("user"));
             session.invalidate();
         }
-        resp.sendRedirect("login.html");
+        resp.sendRedirect("/");
     }
 }

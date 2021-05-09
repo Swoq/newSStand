@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!doctype html>
 <html lang="en">
@@ -17,7 +16,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
 
     <!-- Bootstrap core CSS -->
-    <link href="${contextPath}/layouts/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value="layouts/static/styles/bootstrap.min.css"/>" rel="stylesheet">
 
     <style>
         body {
@@ -124,11 +123,11 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="${contextPath}/layouts/styles/signin.css" rel="stylesheet">
+    <link href="<c:url value="layouts/static/styles/signin.css"/>" rel="stylesheet">
 </head>
 <body>
 <div class="login-form">
-    <form action="${contextPath}/login" method="post">
+    <form action="<c:url value="/login"/>" method="post">
         <div class="avatar"><i class="material-icons">&#xE7FF;</i></div>
         <h4 class="modal-title">Login to Your Account</h4>
         <div class="form-group">
@@ -143,7 +142,7 @@
         </div>
         <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
     </form>
-    <div class="text-center small">Don't have an account? <a href="${contextPath}/registration">Sign up</a></div>
+    <div class="text-center small">Don't have an account? <a href="<c:url value="/registration"/>">Sign up</a></div>
 </div>
 
 

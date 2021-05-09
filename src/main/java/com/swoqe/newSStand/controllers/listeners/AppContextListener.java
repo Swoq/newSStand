@@ -6,7 +6,6 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletContextEvent;
 import javax.servlet.ServletContextListener;
 import javax.servlet.annotation.WebListener;
-import java.sql.Connection;
 import java.sql.SQLException;
 
 @WebListener
@@ -23,7 +22,6 @@ public class AppContextListener implements ServletContextListener {
         DBCPDataSource dbcpDataSource = new DBCPDataSource(dbURL, user, pwd);
         ctx.setAttribute("DBSource", dbcpDataSource);
         System.out.println("DB Source initialized successfully.");
-
 
     }
 

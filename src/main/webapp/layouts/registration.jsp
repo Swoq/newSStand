@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -9,7 +8,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Registration</title>
-    <link href="${contextPath}/layouts/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value="layouts/static/styles/bootstrap.min.css"/>" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <style>
         body {
@@ -100,7 +99,7 @@
 </head>
 <body>
 <div class="signup-form">
-    <form action="${contextPath}/registration" method="post">
+    <form action="<c:url value="/registration"/>" method="post">
         <h2>Sign Up</h2>
         <p>Please fill in this form to create an account!</p>
         <hr>
@@ -153,7 +152,7 @@
             <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
         </div>
     </form>
-    <div class="text-center">Already have an account? <a href="${contextPath}/login">Login here</a></div>
+    <div class="text-center">Already have an account? <a href="<c:url value="/login"/>">Login here</a></div>
 </div>
 </body>
 </html>

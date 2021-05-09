@@ -1,6 +1,5 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <html lang="en">
 <head>
@@ -14,9 +13,21 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
 
     <!-- Bootstrap core CSS -->
-    <link href="${contextPath}/layouts/assets/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="<c:url value="layouts/static/styles/bootstrap.min.css"/>" rel="stylesheet">
 
     <style>
+        .bd-placeholder-img {
+            font-size: 1.125rem;
+            text-anchor: middle;
+            -webkit-user-select: none;
+            -moz-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
+        }
+
+        @media (min-width: 768px) {
+        }
+
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -33,7 +44,7 @@
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="${contextPath}/layouts/styles/blog.css" rel="stylesheet">
+    <link href="<c:url value="layouts/static/styles/blog.css"/>" rel="stylesheet">
 </head>
 <body>
 
@@ -41,20 +52,20 @@
     <header class="blog-header py-3">
         <div class="row flex-nowrap justify-content-between align-items-center">
             <div class="col-4 pt-1">
-                <a class="text-muted" href="#">Subscribe</a>
+                <a class="text-muted" href="<c:url value="/catalog"/>">Catalog</a>
             </div>
             <div class="col-4 text-center">
-                <a class="blog-header-logo text-dark" href="#">NewSStand</a>
+                <a class="blog-header-logo text-dark" href="<c:url value="/"/>">NewSStand</a>
             </div>
             <div class="col-4 d-flex justify-content-end align-items-center">
                 <c:if test="${sessionScope.user == null}">
-                    <a class="btn btn-sm btn-outline-secondary mr-1" href="${contextPath}/registration">Sign up</a>
-                    <a class="btn btn-sm btn-outline-secondary" href="${contextPath}/login">Sign in</a>
+                    <a class="btn btn-sm btn-outline-secondary mr-1" href="<c:url value="/registration"/>">Sign up</a>
+                    <a class="btn btn-sm btn-outline-secondary" href="<c:url value="/login"/>">Sign in</a>
                 </c:if>
                 <c:if test="${sessionScope.user != null}">
                     <h5 class="font-italic text-dark">
                         <c:out value="${sessionScope.user.firstName} ${sessionScope.user.lastName}"/>
-                        <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/logout">Logout</a>
+                        <a class="btn btn-sm ml-1 btn-outline-secondary" href="<c:url value="/logout"/>">Logout</a>
                     </h5>
                 </c:if>
 
@@ -64,18 +75,18 @@
 
     <div class="nav-scroller py-1 mb-2">
         <nav class="nav d-flex justify-content-between">
-            <a class="p-2 text-muted" href="#">World</a>
-            <a class="p-2 text-muted" href="#">U.S.</a>
-            <a class="p-2 text-muted" href="#">Technology</a>
-            <a class="p-2 text-muted" href="#">Design</a>
-            <a class="p-2 text-muted" href="#">Culture</a>
-            <a class="p-2 text-muted" href="#">Business</a>
-            <a class="p-2 text-muted" href="#">Politics</a>
-            <a class="p-2 text-muted" href="#">Opinion</a>
-            <a class="p-2 text-muted" href="#">Science</a>
-            <a class="p-2 text-muted" href="#">Health</a>
-            <a class="p-2 text-muted" href="#">Style</a>
-            <a class="p-2 text-muted" href="#">Travel</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=World"/>">World</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=US"/>">U.S.</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Technology"/>">Technology</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Design"/>">Design</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Culture"/>">Culture</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Business"/>">Business</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Politics"/>">Politics</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Opinion"/>">Opinion</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Science"/>">Science</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Health"/>">Health</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Style"/>">Style</a>
+            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Travel"/>">Travel</a>
         </nav>
     </div>
 
@@ -83,7 +94,7 @@
         <div class="col-md-6 px-0">
             <h1 class="display-4 font-italic">Dive into periodical publication world</h1>
             <p class="lead my-3">With NewSStand you will receive fresh newspapers, comics, magazines and even professional journals</p>
-            <p class="lead mb-0"><a href="#" class="text-white font-weight-bold">- Choose something for yourself -</a></p>
+            <p class="lead mb-0"><a href="<c:url value="/catalog"/>" class="text-white font-weight-bold">- Choose something for yourself -</a></p>
         </div>
     </div>
 
