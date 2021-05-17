@@ -102,6 +102,9 @@
     <form action="<c:url value="/registration"/>" method="post">
         <h2>Sign Up</h2>
         <p>Please fill in this form to create an account!</p>
+        <c:if test="${requestScope.errMsg != null}">
+            <p class="mb-2 text-danger text-center font-italic">${requestScope.errMsg}</p>
+        </c:if>
         <hr>
         <div class="form-group">
             <div class="input-group">
@@ -110,8 +113,8 @@
 						<span class="fa fa-user"></span>
 					</span>
                 </div>
-                <input type="text" class="form-control" name="firstName" placeholder="First Name" required="required">
-                <input type="text" class="form-control" name="secondName" placeholder="Second Name" required="required">
+                <input type="text" class="form-control" name="firstName" placeholder="First Name" required="required" value="${requestScope.prevFirst}">
+                <input type="text" class="form-control" name="secondName" placeholder="Second Name" required="required" value="${requestScope.prevSecond}">
             </div>
         </div>
         <div class="form-group">
@@ -121,7 +124,7 @@
 						<i class="fa fa-paper-plane"></i>
 					</span>
                 </div>
-                <input type="email" class="form-control" name="email" placeholder="Email Address" required="required">
+                <input type="email" class="form-control" name="email" placeholder="Email Address" required="required" value="${requestScope.prevEmail}">
             </div>
         </div>
         <div class="form-group">
@@ -152,7 +155,8 @@
             <button type="submit" class="btn btn-primary btn-lg">Sign Up</button>
         </div>
     </form>
-    <div class="text-center">Already have an account? <a href="<c:url value="/login"/>">Login here</a></div>
+    <div class="text-center" style="color: dimgrey">Already have an account? <a style="color: dimgrey" href="<c:url value="/login"/>">Login here</a></div>
+    <div class="text-center"><a style="color: dimgrey" href="<c:url value="/"/>">Main Page</a></div>
 </div>
 </body>
 </html>

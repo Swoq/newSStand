@@ -10,15 +10,13 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import java.io.IOException;
 
-@WebFilter("/AuthenticationFilter")
-public class AuthenticationFilter implements Filter {
+@WebFilter(filterName = "SecurityFilter", urlPatterns = {"/*"})
+public class SecurityFilter implements Filter {
 
-    final static Logger logger = LogManager.getLogger(AuthenticationFilter.class);
+    final static Logger logger = LogManager.getLogger(SecurityFilter.class);
 
     @Override
-    public void init(FilterConfig filterConfig) {
-//        logger.info("AuthenticationFilter initialized");
-    }
+    public void init(FilterConfig filterConfig) {}
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {

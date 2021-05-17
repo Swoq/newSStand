@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <!doctype html>
 <html lang="en">
@@ -130,8 +131,14 @@
     <form action="<c:url value="/login"/>" method="post">
         <div class="avatar"><i class="material-icons">&#xE7FF;</i></div>
         <h4 class="modal-title">Login to Your Account</h4>
+        <c:if test="${requestScope.regCompleted != null}">
+            <p class="mb-2 text-success text-center font-italic">Registration successfully completed!</p>
+        </c:if>
+        <c:if test="${requestScope.errMsg != null}">
+            <p class="mb-2 text-danger text-center font-italic">${requestScope.errMsg}</p>
+        </c:if>
         <div class="form-group">
-            <input type="text" class="form-control" name="email" placeholder="Email" required="required">
+            <input type="text" class="form-control" name="email" placeholder="Email" required="required" value="${param.get("email")}">
         </div>
         <div class="form-group">
             <input type="password" class="form-control" name="pwd" placeholder="Password" required="required">
@@ -144,6 +151,7 @@
     </form>
     <div class="text-center small">Don't have an account? <a href="<c:url value="/registration"/>">Sign up</a></div>
 </div>
+
 
 
 </body>

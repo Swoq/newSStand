@@ -1,5 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<%@ page import="com.swoqe.newSStand.model.entity.UserRole" %>
 
 <html lang="en">
 <head>
@@ -49,46 +51,8 @@
 <body>
 
 <div class="container">
-    <header class="blog-header py-3">
-        <div class="row flex-nowrap justify-content-between align-items-center">
-            <div class="col-4 pt-1">
-                <a class="text-muted" href="<c:url value="/catalog"/>">Catalog</a>
-            </div>
-            <div class="col-4 text-center">
-                <a class="blog-header-logo text-dark" href="<c:url value="/"/>">NewSStand</a>
-            </div>
-            <div class="col-4 d-flex justify-content-end align-items-center">
-                <c:if test="${sessionScope.user == null}">
-                    <a class="btn btn-sm btn-outline-secondary mr-1" href="<c:url value="/registration"/>">Sign up</a>
-                    <a class="btn btn-sm btn-outline-secondary" href="<c:url value="/login"/>">Sign in</a>
-                </c:if>
-                <c:if test="${sessionScope.user != null}">
-                    <h5 class="font-italic text-dark">
-                        <c:out value="${sessionScope.user.firstName} ${sessionScope.user.lastName}"/>
-                        <a class="btn btn-sm ml-1 btn-outline-secondary" href="<c:url value="/logout"/>">Logout</a>
-                    </h5>
-                </c:if>
 
-            </div>
-        </div>
-    </header>
-
-    <div class="nav-scroller py-1 mb-2">
-        <nav class="nav d-flex justify-content-between">
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=World"/>">World</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=US"/>">U.S.</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Technology"/>">Technology</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Design"/>">Design</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Culture"/>">Culture</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Business"/>">Business</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Politics"/>">Politics</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Opinion"/>">Opinion</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Science"/>">Science</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Health"/>">Health</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Style"/>">Style</a>
-            <a class="p-2 text-muted" href="<c:url value="/catalog?genre=Travel"/>">Travel</a>
-        </nav>
-    </div>
+    <%@ include file = "layouts/static/templates/header.jsp" %>
 
     <div class="jumbotron p-4 p-md-5 text-white rounded bg-dark">
         <div class="col-md-6 px-0">
@@ -246,14 +210,54 @@
 
 </main><!-- /.container -->
 
-<footer class="blog-footer">
-    <p>Blog template built for <a href="https://getbootstrap.com/">Bootstrap</a> by <a href="https://twitter.com/mdo">@mdo</a>.</p>
-    <p>
-        <a href="#">Back to top</a>
-    </p>
-</footer>
+<%--Modal--%>
+<div class="modal fade" id="adminModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title align-content-center" id="exampleModalLabel">Admin Panel</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="d-flex flex-column">
+                    <a class="btn btn-sm mb-4 btn-outline-secondary" href="<c:url value="/catalog/add"/>">Add new publication</a>
+                    <form action="#" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Email to block" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Block</button>
+                            </div>
+                        </div>
+                    </form>
+                    <form action="#" method="get">
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Email to unblock" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <div class="input-group-append">
+                                <button class="btn btn-outline-secondary" type="button">Unblock</button>
+                            </div>
+                        </div>
+
+                    </form>
+
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 
+<%@ include file = "layouts/static/templates/footer.html" %>
+
+<script
+        src="https://code.jquery.com/jquery-3.6.0.min.js"
+        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
+        crossorigin="anonymous"></script>
+<script src="<c:url value="layouts/static/js/bootstrap.bundle.min.js" />"></script>
 </body>
 </html>

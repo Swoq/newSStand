@@ -12,8 +12,17 @@ import java.io.IOException;
 public class ImageProcessing {
     final static Logger logger = LogManager.getLogger(ImageProcessing.class);
 
-    public static File bytesToImage(byte[] byteImg, String fileName){
-        File file = new File(fileName);
+    public static File bytesToFile(byte[] byteImg, String fileName, String UPLOAD_DIRECTORY, String realPath){
+        String path = realPath + File.separator + UPLOAD_DIRECTORY + File.separator + fileName;
+        File file = new File(path);
+        try {
+            if(file.createNewFile())
+                logger.info("File was created at: {}", file);
+            else
+                logger.info("File has already created: {}", file);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         try (FileOutputStream fos = new FileOutputStream(file)) {
             fos.write(byteImg, 0, byteImg.length);
         } catch (IOException e) {

@@ -36,7 +36,7 @@ public class UserService {
             System.out.println(preparedStatement);
 
             preparedStatement.executeUpdate();
-            logger.info("User was created: " + user);
+            logger.info("User was added to database: " + user);
         } catch (SQLException throwables) {
             logger.error(throwables);
         }

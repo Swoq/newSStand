@@ -7,65 +7,93 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.*;
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 
 public class PeriodicalPublicationService {
     final static Logger logger = LogManager.getLogger(PeriodicalPublicationService.class);
 
+    private final PeriodService periodService = new PeriodService();
+
+    private static final String UPLOAD_DIRECTORY = "layouts/static/pp_covers";
+
     private final String ADD_PUBLICATION = "INSERT INTO periodical_publications " +
-            "(name, publication_date, cover_img, publisher, img_name) " +
-            "values (?, ?, ?, ?, ?)";
+            "(id, name, publication_date, cover_img, publisher, img_name, description) " +
+            "values (DEFAULT, ?, ?, ?, ?, ?, ?)";
 
-    private final String GET_N_PUBLICATIONS = "select periodical_publications.*, pp.price as price, p.name as period_name " +
-            "from periodical_publications \n" +
-            "join publication_periods pp on periodical_publications.id = pp.publication_id \n" +
-            "join periods p on pp.period_id = p.id \n" +
-            "limit ?";
+    private final String GET_N_PUBLICATIONS = "SELECT id, name, publication_date, cover_img, publisher, img_name, description " +
+            "from periodical_publications limit ?";
 
-    // TO DO REDO!
     public void addPublication(PeriodicalPublication publication){
-        try(Connection connection = DBCPDataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement(ADD_PUBLICATION)){
-
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(ADD_PUBLICATION, Statement.RETURN_GENERATED_KEYS)
+        ){
             ps.setString(1, publication.getName());
             ps.setDate(2, Date.valueOf(publication.getPublicationDate()));
-
-            File img = publication.getCoverImg();
-            try(FileInputStream fileInputStream = new FileInputStream(img)){
-                ps.setBinaryStream(3, fileInputStream, img.length());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
             ps.setString(4, publication.getPublisher());
-            ps.setString(5, publication.getImageName());
+            ps.setString(6, publication.getDescription());
 
-            ps.executeUpdate();
+            Optional<File> optionalFile = Optional.ofNullable(publication.getCoverImg());
+            if(optionalFile.isPresent()){
+                File img = optionalFile.get();
+                try(FileInputStream fileInputStream = new FileInputStream(img)){
+                    ps.setBinaryStream(3, fileInputStream, (int) img.length());
+                    ps.setString(5, img.getName());
+                    ps.executeUpdate();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+            else{
+                ps.setNull(3, Types.VARCHAR);
+                ps.setNull(5, Types.VARCHAR);
+                ps.executeUpdate();
+            }
+            try (ResultSet generatedKeys = ps.getGeneratedKeys()) {
+                if (generatedKeys.next()) {
+                    publication.setId(generatedKeys.getLong("id"));
+                }
+            }
+
+            this.periodService.insertPublicationPeriods(publication);
         } catch (SQLException e){
             logger.error(e);
+            e.printStackTrace();
         }
     }
 
-    public List<PeriodicalPublication> getNPublications(int n) {
+    public List<PeriodicalPublication> getNPublications(int n, String realPath) {
         List<PeriodicalPublication> publications = new ArrayList<>();
 
-        try(Connection connection = DBCPDataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement(GET_N_PUBLICATIONS)){
-
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_N_PUBLICATIONS)
+        ){
             ps.setInt(1, n);
             try(ResultSet resultSet = ps.executeQuery()){
                 while(resultSet.next()){
-                    PeriodicalPublication p = new PeriodicalPublication();
-                    p.setId(resultSet.getLong("id"));
-                    p.setName(resultSet.getString("name"));
-                    p.setPublicationDate(resultSet.getDate("publication_date").toLocalDate());
-                    p.setCoverImg(ImageProcessing.bytesToImage(resultSet.getBytes("cover_img"),
-                            resultSet.getString("img_name")));
-                    p.setPublisher(resultSet.getString("publisher"));
-                    p.setPeriodName(resultSet.getString("period_name"));
-                    p.setShownLowestPrice(resultSet.getBigDecimal("price"));
-                    p.setDescription(resultSet.getString("description"));
+                    byte[] bytes = resultSet.getBytes("cover_img");
+                    String fileName = resultSet.getString("img_name");
+                    File file = null;
+                    if(bytes != null){
+                        file = ImageProcessing.bytesToFile(bytes, fileName, UPLOAD_DIRECTORY, realPath);
+                    }
+                    Long id = resultSet.getLong("id");
+                    Map<String, BigDecimal> prices = periodService.getPeriodsByPublicationId(id);
+                    PeriodicalPublication p = new PeriodicalPublication.PublicationBuilder()
+                            .withId(id)
+                            .withName(resultSet.getString("name"))
+                            .withPublicationDate(resultSet.getDate("publication_date").toLocalDate())
+                            .withCoverImg(file)
+                            .withPublisher(resultSet.getString("publisher"))
+                            .withPricesMap(prices)
+                            .withDescription(resultSet.getString("description"))
+                            .build();
 
                     publications.add(p);
                 }

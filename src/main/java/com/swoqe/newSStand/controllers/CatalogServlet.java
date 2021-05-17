@@ -42,35 +42,9 @@ public class CatalogServlet extends HttpServlet {
             }
         }
 
-//        List<PeriodicalPublication> publications = publicationService.getNPublications(n);
-        List<PeriodicalPublication> publications = getTestPublications();
+        List<PeriodicalPublication> publications = publicationService.getNPublications(n, getServletContext().getRealPath(""));
         req.setAttribute("publications", publications);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("layouts/catalog.jsp");
         requestDispatcher.forward(req, resp);
-    }
-
-    private List<PeriodicalPublication> getTestPublications(){
-        String[] files = new String[]{"1.jpg", "2.jpg", "3.jpg", "4.jpg", "5.jpg", "6.jpg", "7.jpg"};
-        List<PeriodicalPublication> publications = new ArrayList<>();
-
-        for(String fileName : files){
-            try{
-                File file = new File("layouts/static/pp_covers/" + fileName);
-                PeriodicalPublication p = new PeriodicalPublication();
-                p.setName("SomeLongName");
-                p.setPublicationDate(LocalDate.now());
-                p.setCoverImg(file);
-                p.setPublisher("Some Long Publisher");
-                p.setImageName(file.getName());
-                p.setShownLowestPrice(BigDecimal.valueOf(100));
-                p.setPeriodName("month");
-                p.setDescription("Some long description, Some long description, Some long description, Some long description, Some long description, Some long description");
-
-                publications.add(p);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-        return publications;
     }
 }
