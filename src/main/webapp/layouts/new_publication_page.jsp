@@ -11,6 +11,7 @@
 
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
+    <link href="${contextPath}/layouts/static/styles/bootstrap-multiselect.min.css" rel="stylesheet" type="text/css">
 
     <style>
         .new-publication-form {
@@ -43,6 +44,18 @@
                     <span class="input-group-text" id="basic-addon2">Publisher</span>
                 </div>
                 <input type="text" class="form-control" name="publisher" aria-describedby="basic-addon2" value="${requestScope.prevPublisher}">
+            </div>
+
+<%--    Genres Multiselect--%>
+            <div class="input-group mb-3">
+                <select class="custom-select" name="genresSelection" id="genre_multi_select" multiple="multiple">
+                    <option value="1">One</option>
+                    <option value="2">Two</option>
+                    <option value="3">Three</option>
+                </select>
+                <div class="input-group-append">
+                    <label class="input-group-text" for="genre_multi_select">Options</label>
+                </div>
             </div>
 <%--            Publication Date--%>
             <div class="input-group mb-3">
@@ -123,10 +136,11 @@
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
 <script src="${contextPath}/layouts/static/js/bootstrap.bundle.min.js"></script>
-
+<script src="${contextPath}/layouts/static/js/bootstrap-multiselect.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.add-one').click();
+        $('#genre_multi_select').multiselect();
     });
 
     $('.custom-file-input').on('change', function() {

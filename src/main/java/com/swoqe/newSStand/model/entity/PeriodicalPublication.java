@@ -3,6 +3,8 @@ package com.swoqe.newSStand.model.entity;
 import java.io.File;
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
@@ -12,8 +14,9 @@ public class PeriodicalPublication {
     private final LocalDate publicationDate;
     private final File coverImg;
     private final String publisher;
-    private final Map<String, BigDecimal> pricesPerPeriods;
     private final String description;
+    private final Map<String, BigDecimal> pricesPerPeriods;
+    private List<Genre> genres;
     private BigDecimal shownPrice;
     private String shownPeriod;
 
@@ -24,6 +27,7 @@ public class PeriodicalPublication {
         this.coverImg = publicationBuilder.coverImg;
         this.publisher = publicationBuilder.publisher;
         this.pricesPerPeriods = publicationBuilder.pricesPerPeriods;
+        this.genres = publicationBuilder.genres;
         if(this.pricesPerPeriods != null)
             initShown();
         else {
@@ -132,6 +136,7 @@ public class PeriodicalPublication {
         private File coverImg;
         private String publisher;
         private Map<String, BigDecimal> pricesPerPeriods;
+        private List<Genre> genres = new ArrayList<>();
         private String description;
 
         public PublicationBuilder withId(Long id){
@@ -169,6 +174,11 @@ public class PeriodicalPublication {
             return this;
         }
 
+        public PublicationBuilder withGenres(List<Genre> genres){
+            this.genres = genres;
+            return this;
+        }
+
         public PublicationBuilder basedOn(PublicationBuilder builder){
             this.id = builder.id;
             this.name = builder.name;
@@ -176,6 +186,7 @@ public class PeriodicalPublication {
             this.coverImg = builder.coverImg;
             this.publisher = builder.publisher;
             this.pricesPerPeriods = builder.pricesPerPeriods;
+            this.genres = builder.genres;
             this.description = builder.description;
             return this;
         }
