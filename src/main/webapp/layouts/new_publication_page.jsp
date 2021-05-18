@@ -22,6 +22,8 @@
 
 
     </style>
+
+
 </head>
 <body>
 <div class="container">
@@ -48,15 +50,18 @@
 
 <%--    Genres Multiselect--%>
             <div class="input-group mb-3">
-                <select class="custom-select" name="genresSelection" id="genre_multi_select" multiple="multiple">
-                    <option value="1">One</option>
-                    <option value="2">Two</option>
-                    <option value="3">Three</option>
-                </select>
-                <div class="input-group-append">
-                    <label class="input-group-text" for="genre_multi_select">Options</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Genres</span>
+                </div>
+                <div class="col-sm-10">
+                    <select class="custom-select form-control" name="genres" id="genreMultiSelect" multiple="multiple" style="display: none">
+                        <c:forEach var="genre" items="${requestScope.genres}">
+                            <option value="${genre.name}">${genre.name}</option>
+                        </c:forEach>
+                    </select>
                 </div>
             </div>
+
 <%--            Publication Date--%>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
@@ -114,9 +119,8 @@
         <p class="my-auto">per</p>
         <div class="input-group mb-3 col-md-3 my-auto">
             <select class="custom-select form-control" id="rol" name="periods">
-                <jsp:useBean id="periods" scope="request" type="java.util.List"/>
-                <c:forEach var="period" items="${periods}">
-                    <option value="${period.getName()}">${period.getName()}</option>
+                <c:forEach var="period" items="${requestScope.periods}">
+                    <option value="${period.name}">${period.name}</option>
                 </c:forEach>
             </select>
             <div class="input-group-append">
@@ -131,16 +135,18 @@
     </div>
 </div>
 <!-- END OF HIDDEN ELEMENT -->
+
 <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script src="${contextPath}/layouts/static/js/bootstrap.bundle.min.js"></script>
-<script src="${contextPath}/layouts/static/js/bootstrap-multiselect.min.js"></script>
+<script src="${contextPath}/layouts/static/js/BsMultiSelect.js"></script>
 <script>
     $(document).ready(function () {
         $('.add-one').click();
-        $('#genre_multi_select').multiselect();
+        $('#genreMultiSelect').bsMultiSelect();
     });
 
     $('.custom-file-input').on('change', function() {

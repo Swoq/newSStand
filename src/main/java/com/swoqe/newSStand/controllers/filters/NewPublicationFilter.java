@@ -1,6 +1,8 @@
 package com.swoqe.newSStand.controllers.filters;
 
+import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.Period;
+import com.swoqe.newSStand.model.services.GenreService;
 import com.swoqe.newSStand.model.services.PeriodService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +25,7 @@ public class NewPublicationFilter implements Filter {
     final private static String[] ACCEPTABLE_FILE_FORMATS = new String[]{".jpg", ".png"};
 
     private final PeriodService periodService = new PeriodService();
+    private final GenreService genreService = new GenreService();
 
     @Override
     public void init(FilterConfig filterConfig) {
@@ -42,6 +45,7 @@ public class NewPublicationFilter implements Filter {
             Part filePart = req.getPart("cover_file");
             String[] periods = req.getParameterValues("periods");
             String[] prices = req.getParameterValues("prices");
+            String[] genres = req.getParameterValues("genres");
             LocalDate parsedDate = null;
             String errorMsg;
 
@@ -51,12 +55,14 @@ public class NewPublicationFilter implements Filter {
                 logger.error(e);
             }
 
-            errorMsg = validateFields(title, publisher, parsedDate, description, filePart, periods, prices);
+            errorMsg = validateFields(title, publisher, parsedDate, description, filePart, periods, prices, genres);
             if (errorMsg != null){
                 ServletContext context = req.getServletContext();
                 RequestDispatcher rd = context.getRequestDispatcher("/layouts/new_publication_page.jsp");
                 List<Period> allPeriods = periodService.getAllPeriods();
+                List<Genre> allGenres = genreService.getAllGenres();
                 req.setAttribute("periods", allPeriods);
+                req.setAttribute("genres", allGenres);
                 req.setAttribute("errMsg", errorMsg);
                 req.setAttribute("prevTitle", title);
                 req.setAttribute("prevPublisher", publisher);
@@ -76,7 +82,7 @@ public class NewPublicationFilter implements Filter {
     }
 
     private String validateFields(String title, String publisher, LocalDate publicationDate, String description,
-                                  Part filePart, String[] periods, String[] prices) {
+                                  Part filePart, String[] periods, String[] prices, String[] genres) {
         if(title == null || title.equals(""))
             return "Title cannot be empty!";
         if(title.length() > 255)
@@ -94,6 +100,8 @@ public class NewPublicationFilter implements Filter {
 
         if(periods == null || prices == null || periods.length == 0 || prices.length == 0)
             return "Prices or Periods cannot be empty!";
+        if(genres == null || genres.length ==0)
+            return "Publication should be related with at least one topic!";
 
         if(periods.length != prices.length)
             return "Periods amount should be the same as prices!";

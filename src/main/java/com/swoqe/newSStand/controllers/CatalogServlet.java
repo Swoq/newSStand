@@ -29,7 +29,7 @@ public class CatalogServlet extends HttpServlet {
         String sortBy = req.getParameter("sortBy");
         String genre = req.getParameter("genre");
         String shown = req.getParameter("shown");
-        int n = 10;
+        int n = 15;
         if(sortBy == null)
             sortBy = "default";
         if(genre == null)

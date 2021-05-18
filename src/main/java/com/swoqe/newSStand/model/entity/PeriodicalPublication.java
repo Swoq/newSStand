@@ -86,6 +86,10 @@ public class PeriodicalPublication {
         return description;
     }
 
+    public List<Genre> getGenres() {
+        return genres;
+    }
+
     public void setId(Long id) {
         this.id = id;
     }

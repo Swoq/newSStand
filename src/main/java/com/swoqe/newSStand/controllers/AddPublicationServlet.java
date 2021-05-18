@@ -1,7 +1,9 @@
 package com.swoqe.newSStand.controllers;
 
+import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.Period;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
+import com.swoqe.newSStand.model.services.GenreService;
 import com.swoqe.newSStand.model.services.PeriodService;
 import com.swoqe.newSStand.model.services.PeriodicalPublicationService;
 import com.swoqe.newSStand.util.Tools;
@@ -29,13 +31,15 @@ public class AddPublicationServlet extends HttpServlet {
     private static final String UPLOAD_DIRECTORY = "layouts/static/pp_covers";
 
     private final PeriodService periodService = new PeriodService();
+    private final GenreService genreService = new GenreService();
     private final PeriodicalPublicationService publicationService = new PeriodicalPublicationService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         List<Period> periods = periodService.getAllPeriods();
-
+        List<Genre> genres = genreService.getAllGenres();
         req.setAttribute("periods", periods);
+        req.setAttribute("genres", genres);
 
         RequestDispatcher requestDispatcher = getServletContext().getRequestDispatcher("/layouts/new_publication_page.jsp");
         requestDispatcher.forward(req, resp);
@@ -49,17 +53,19 @@ public class AddPublicationServlet extends HttpServlet {
         String description = req.getParameter("description");
         String[] periods = req.getParameterValues("periods");
         String[] prices = req.getParameterValues("prices");
+        String[] genres = req.getParameterValues("genres");
         Optional<Part> optionalPart = Optional.ofNullable(req.getPart("cover_file"));
         File file = null;
         if (optionalPart.isPresent())
             file = Tools.partToFile(optionalPart.get(), getServletContext(), UPLOAD_DIRECTORY);
-
+        List<Genre> genresEntities = genreService.getGenresByNames(genres);
         PeriodicalPublication publication = new PeriodicalPublication.PublicationBuilder()
                 .withName(title)
                 .withPublisher(publisher)
                 .withPublicationDate(publishingDate)
                 .withDescription(description)
                 .withCoverImg(file)
+                .withGenres(genresEntities)
                 .withPricesMap(Tools.toHashMap(periods, prices))
                 .build();
 

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 <%@ page import="com.swoqe.newSStand.model.entity.UserRole" %>
+<c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <html>
 <head>
@@ -88,17 +88,17 @@
 <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-between">
         <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">World</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">U.S.</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Technology</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Design</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Culture</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Business</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Politics</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Opinion</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Science</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Health</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Style</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">Travel</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=U.S.">U.S.</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Technology">Technology</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Design">Design</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Culture">Culture</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Business">Business</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Politics">Politics</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Opinion">Opinion</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Science">Science</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Health">Health</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Style">Style</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Travel">Travel</a>
     </nav>
 </div>
 
@@ -116,6 +116,7 @@
                 <div class="d-flex flex-column">
                     <a class="btn btn-sm mb-4 btn-outline-secondary" href="${contextPath}/catalog/add">Add new publication</a>
                     <a class="btn btn-sm mb-4 btn-outline-secondary addPeriodBtn">Add new period</a>
+                    <a class="btn btn-sm mb-4 btn-outline-secondary addGenreBtn">Add new genre</a>
 
                     <form action="${contextPath}/periods/add" method="post" >
                         <div class="input-group mb-3">
@@ -127,7 +128,18 @@
                                 <input type="hidden" class="btn btn-outline-secondary" id="submitPeriodBtn" value="Submit">
                             </div>
                         </div>
+                    </form>
 
+                    <form action="${contextPath}/genres/add" method="post" >
+                        <div class="input-group mb-3">
+                            <input type="hidden" class="form-control addGenreForm" placeholder="Genre name e.g 'horror'"
+                                   name="name">
+                            <input type="hidden" class="form-control addGenreForm" placeholder="Description"
+                                   name="description">
+                            <div class="input-group-append">
+                                <input type="hidden" class="btn btn-outline-secondary" id="submitGenreBtn" value="Submit">
+                            </div>
+                        </div>
                     </form>
 
                     <form action="#" method="get">
@@ -164,11 +176,17 @@
 <script src="${contextPath}/layouts/static/js/bootstrap.bundle.min.js"></script>
 
 <script>
-    $('.addPeriodBtn').on('click', add);
+    $('.addPeriodBtn').on('click', addPeriod);
+    $('.addGenreBtn').on('click', addGenre);
 
-    function add() {
+    function addPeriod() {
         $('.addPeriodForm').attr("type", "text");
         $('#submitPeriodBtn').attr("type", "submit");
+    }
+
+    function addGenre() {
+        $('.addGenreForm').attr("type", "text");
+        $('#submitGenreBtn').attr("type", "submit");
     }
 
 </script>
