@@ -11,7 +11,6 @@
 
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
-    <link href="${contextPath}/layouts/static/styles/bootstrap-multiselect.min.css" rel="stylesheet" type="text/css">
 
     <style>
         .new-publication-form {
@@ -159,7 +158,6 @@
         $('.dynamic-element').first().clone().appendTo('.dynamic-stuff').show();
         attach_delete();
     });
-
 
     //Attach functionality to delete buttons
     function attach_delete(){

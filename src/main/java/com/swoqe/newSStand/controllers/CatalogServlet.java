@@ -1,6 +1,8 @@
 package com.swoqe.newSStand.controllers;
 
+import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
+import com.swoqe.newSStand.model.services.GenreService;
 import com.swoqe.newSStand.model.services.PeriodicalPublicationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,26 +25,36 @@ public class CatalogServlet extends HttpServlet {
     final static Logger logger = LogManager.getLogger(CatalogServlet.class);
 
     private final PeriodicalPublicationService publicationService = new PeriodicalPublicationService();
+    private final GenreService genreService = new GenreService();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String sortBy = req.getParameter("sortBy");
-        String genre = req.getParameter("genre");
         String shown = req.getParameter("shown");
-        int n = 15;
-        if(sortBy == null)
-            sortBy = "default";
-        if(genre == null)
-            genre = "default";
-        else {
-            try{
-                n = Integer.parseInt(shown);
-            }catch (NumberFormatException numberFormatException){
-                logger.error(numberFormatException);
-            }
+        String page = req.getParameter("page");
+        int currentPage = 1;
+        int recordsPerPage = 15;
+        try{
+            if(shown != null)
+                recordsPerPage = Integer.parseInt(shown);
+            if(page != null)
+                currentPage = Integer.parseInt(page);
+        }catch (NumberFormatException numberFormatException){
+            logger.error(numberFormatException);
         }
 
-        List<PeriodicalPublication> publications = publicationService.getNPublications(n, getServletContext().getRealPath(""));
+        List<PeriodicalPublication> publications = publicationService.getNPublications(recordsPerPage, currentPage,
+                getServletContext().getRealPath(""));
+
+        int rows = publicationService.getNumberOfRows();
+
+        int nOfPages = (int) Math.ceil((rows * 1.0) / recordsPerPage);
+
+        List<Genre> genres = genreService.getAllGenres();
+        req.setAttribute("noOfPages", nOfPages);
+        req.setAttribute("currentPage", currentPage);
+        req.setAttribute("recordsPerPage", recordsPerPage);
+        req.setAttribute("genres", genres);
+
         req.setAttribute("publications", publications);
         RequestDispatcher requestDispatcher = req.getRequestDispatcher("layouts/catalog.jsp");
         requestDispatcher.forward(req, resp);

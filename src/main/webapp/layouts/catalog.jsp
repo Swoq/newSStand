@@ -55,9 +55,54 @@
     <%@ include file="static/templates/header.jsp" %>
     <%--Content--%>
     <div class="container d-flex flex-column justify-content-center mt-50 mb-50">
-        <div>Some sorting things will be here!</div>
+        <form action="${contextPath}/catalog" method="get" class="mb-0">
+            <div class="form-row">
+                <div class="col-sm-1 mb-3">
+                    <label for="records">Shown:</label>
+                    <select class="form-control" id="records" name="shown">
+                        <option value="5" selected>5</option>
+                        <option value="10">10</option>
+                        <option value="15">15</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 mb-3">
+                    <label for="genreMultiSelect">Genres:</label>
+                    <select class="custom-select form-control" name="genres" id="genreMultiSelect" multiple="multiple"
+                            style="display: none">
+                        <c:forEach var="genre" items="${requestScope.genres}">
+                            <option value="${genre.name}">${genre.name}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-sm-3 mb-3">
+                    <label for="sortBy">Sort By:</label>
+                    <select class="form-control" id="sortBy" name="sortBy">
+                        <option value="name" selected>Title</option>
+                        <option value="price">Price</option>
+                        <option value="publicationDateBefore">Published before</option>
+                        <option value="publicationDateAfter">Published after</option>
+                    </select>
+                </div>
+                <div class="col-sm-3 mb-3" id="hiddenBlock">
+                    <label for="hiddenDate">Date:</label>
+                    <input class="form-control" type="date" id="hiddenDate" disabled>
+                </div>
+                <div class="col-sm-1 mb-3">
+                    <label for="direction">Direction: </label>
+                    <select class="form-control" id="direction" name="direction">
+                        <option value="ASC" selected>ASC</option>
+                        <option value="DESC">DESC</option>
+                    </select>
+                </div>
+                <div class="col-sm-1 mb-3 align-text-bottom">
+                    <label for="btnFilterSubmit">apply</label>
+                    <input type="submit" id="btnFilterSubmit" class="btn btn-outline-dark">
+                </div>
+            </div>
+        </form>
+
         <div class="row">
-            <div class="col-md-10">
+            <div class="col-md-12">
                 <%--                Template--%>
                 <c:forEach var="item" items="${requestScope.publications}">
                     <div class="card card-body mt-3">
@@ -73,7 +118,8 @@
                                 <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
                                     <c:forEach var="genre" items="${item.genres}">
                                         <li class="list-inline-item">
-                                            <a href="${contextPath}/catalog$genre=${genre.name}" class="text-muted" data-abc="true">${genre.name}</a>
+                                            <a href="${contextPath}/catalog$genre=${genre.name}" class="text-muted"
+                                               data-abc="true">${genre.name}</a>
                                         </li>
                                     </c:forEach>
                                 </ul>
@@ -95,30 +141,68 @@
                     </div>
                 </c:forEach>
                 <%--    Template END--%>
-
-                <%--Pagination--%>
-                <nav aria-label="Page navigation example" class="mt-2">
-                    <ul class="pagination justify-content-center">
-                        <li class="page-item disabled">
-                            <a class="page-link" href="#" tabindex="-1">Previous</a>
-                        </li>
-                        <li class="page-item"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item active"><a class="page-link bg-dark border-dark" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item">
-                            <a class="page-link" href="#">Next</a>
-                        </li>
-                    </ul>
-                </nav>
             </div>
         </div>
+        <%--Pagination--%>
+        <nav aria-label="Navigation for countries" class="mt-3 d-flex justify-content-center">
+            <ul class="pagination">
+                <c:if test="${requestScope.currentPage != 1}">
+                    <li class="page-item">
+                        <a class="page-link text-dark"
+                           href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${requestScope.currentPage-1}">Previous</a>
+                    </li>
+                </c:if>
+
+                <c:forEach begin="1" end="${requestScope.noOfPages}" var="i">
+                    <c:choose>
+                        <c:when test="${requestScope.currentPage eq i}">
+                            <li class="page-item active"><a class="page-link bg-dark border-dark">
+                                    ${i} <span class="sr-only">(current)</span></a>
+                            </li>
+                        </c:when>
+                        <c:otherwise>
+                            <li class="page-item"><a class="page-link text-dark"
+                                                     href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${i}">${i}</a>
+                            </li>
+                        </c:otherwise>
+                    </c:choose>
+                </c:forEach>
+
+                <c:if test="${requestScope.currentPage lt requestScope.noOfPages}">
+                    <li class="page-item"><a class="page-link text-dark"
+                                             href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${requestScope.currentPage+1}">Next</a>
+                    </li>
+                </c:if>
+            </ul>
+        </nav>
     </div>
+
 </div>
 <%@ include file="static/templates/footer.html" %>
 <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.11.0/umd/popper.min.js"></script>
 <script src="${contextPath}/layouts/static/js/bootstrap.bundle.min.js"></script>
+<script src="${contextPath}/layouts/static/js/BsMultiSelect.js"></script>
+<script>
+    $(document).ready(function () {
+        $('#genreMultiSelect').bsMultiSelect();
+    });
+
+    $('#sortBy').on('change', function (e) {
+        let optionSelected = $("option:selected", this);
+        let valueSelected = this.value;
+        let dateBlock = $('#hiddenDate');
+        if (valueSelected === 'publicationDateBefore' || valueSelected === 'publicationDateAfter'){
+            dateBlock.removeAttr("disabled")
+        }
+        else {
+            dateBlock.attr("disabled", "disabled");
+        }
+
+    });
+</script>
 </body>
 </html>

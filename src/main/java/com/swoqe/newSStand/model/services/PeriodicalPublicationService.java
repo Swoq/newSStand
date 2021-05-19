@@ -28,7 +28,7 @@ public class PeriodicalPublicationService {
             "values (DEFAULT, ?, ?, ?, ?, ?, ?)";
 
     private final String GET_N_PUBLICATIONS = "SELECT id, name, publication_date, cover_img, publisher, img_name, description " +
-            "from periodical_publications limit ?";
+            "from periodical_publications limit ? offset ?";
 
     public void addPublication(PeriodicalPublication publication){
         try(
@@ -70,13 +70,15 @@ public class PeriodicalPublicationService {
         }
     }
 
-    public List<PeriodicalPublication> getNPublications(int n, String realPath) {
+    public List<PeriodicalPublication> getNPublications(int recordsPerPage, int pageNumber, String realPath) {
         List<PeriodicalPublication> publications = new ArrayList<>();
+        int start = pageNumber * recordsPerPage - recordsPerPage;
         try(
                 Connection connection = DBCPDataSource.getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_N_PUBLICATIONS)
         ){
-            ps.setInt(1, n);
+            ps.setInt(1, recordsPerPage);
+            ps.setInt(2, start);
             try(ResultSet resultSet = ps.executeQuery()){
                 while(resultSet.next()){
                     byte[] bytes = resultSet.getBytes("cover_img");
@@ -109,4 +111,20 @@ public class PeriodicalPublicationService {
     }
 
 
+    public int getNumberOfRows() {
+        String sql = "SELECT COUNT(id) AS count FROM periodical_publications";
+        int rowsCount = 0;
+        try (
+                Connection connection = DBCPDataSource.getConnection();
+                Statement statement = connection.createStatement()
+        ){
+            try(ResultSet resultSet = statement.executeQuery(sql)){
+                resultSet.next();
+                rowsCount = resultSet.getInt("count");
+            }
+        }catch (SQLException e){
+            logger.error(e);
+        }
+        return rowsCount;
+    }
 }
