@@ -87,18 +87,18 @@
 </header>
 <div class="nav-scroller py-1 mb-2">
     <nav class="nav d-flex justify-content-between">
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=World">World</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=U.S.">U.S.</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Technology">Technology</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Design">Design</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Culture">Culture</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Business">Business</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Politics">Politics</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Opinion">Opinion</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Science">Science</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Health">Health</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Style">Style</a>
-        <a class="p-2 text-muted" href="${contextPath}/catalog?genre=Travel">Travel</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=1">World</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=2">U.S.</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=3">Technology</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=4">Design</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=5">Culture</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=6">Business</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=7">Politics</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=8">Opinion</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=9">Science</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=10">Health</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=11">Style</a>
+        <a class="p-2 text-muted" href="${contextPath}/catalog?genres%5B%5D=12">Travel</a>
     </nav>
 </div>
 

@@ -8,6 +8,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.http.Part;
 import java.io.*;
 import java.math.BigDecimal;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -48,6 +49,21 @@ public class Tools {
             logger.error(e);
         }
         return file;
+    }
+
+    public static Integer[] toIntegerArray(String[] numberStrs){
+        Integer[] numbers = new Integer[numberStrs.length];
+        int index = 0;
+        for (String numberStr : numberStrs) {
+            try {
+                numbers[index] = Integer.parseInt(numberStr);
+                index++;
+            } catch (NumberFormatException nfe) {
+                logger.error(nfe);
+            }
+        }
+        numbers = Arrays.copyOf(numbers, index);
+        return numbers;
     }
 
 }

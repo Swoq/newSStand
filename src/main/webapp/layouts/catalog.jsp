@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}"/>
 
 <html>
@@ -67,10 +68,10 @@
                 </div>
                 <div class="col-sm-3 mb-3">
                     <label for="genreMultiSelect">Genres:</label>
-                    <select class="custom-select form-control" name="genres" id="genreMultiSelect" multiple="multiple"
+                    <select class="custom-select form-control" name="genres[]" id="genreMultiSelect" multiple="multiple"
                             style="display: none">
                         <c:forEach var="genre" items="${requestScope.genres}">
-                            <option value="${genre.name}">${genre.name}</option>
+                            <option value="${genre.id}">${genre.name}</option>
                         </c:forEach>
                     </select>
                 </div>
@@ -79,13 +80,14 @@
                     <select class="form-control" id="sortBy" name="sortBy">
                         <option value="name" selected>Title</option>
                         <option value="price">Price</option>
-                        <option value="publicationDateBefore">Published before</option>
-                        <option value="publicationDateAfter">Published after</option>
+                        <option value="date">Publishing date</option>
+                        <option value="date_before" disabled>Published before</option>
+                        <option value="date_after" disabled>Published after</option>
                     </select>
                 </div>
                 <div class="col-sm-3 mb-3" id="hiddenBlock">
                     <label for="hiddenDate">Date:</label>
-                    <input class="form-control" type="date" id="hiddenDate" disabled>
+                    <input class="form-control" name="filterDate" type="date" id="hiddenDate" disabled>
                 </div>
                 <div class="col-sm-1 mb-3">
                     <label for="direction">Direction: </label>
@@ -149,7 +151,7 @@
                 <c:if test="${requestScope.currentPage != 1}">
                     <li class="page-item">
                         <a class="page-link text-dark"
-                           href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${requestScope.currentPage-1}">Previous</a>
+                           href="<my:replaceParam name='page' value='${requestScope.currentPage-1}' />">Previous</a>
                     </li>
                 </c:if>
 
@@ -161,8 +163,8 @@
                             </li>
                         </c:when>
                         <c:otherwise>
-                            <li class="page-item"><a class="page-link text-dark"
-                                                     href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${i}">${i}</a>
+                            <li class="page-item">
+                                <a class="page-link text-dark" href="<my:replaceParam name='page' value='${i}' />">${i}</a>
                             </li>
                         </c:otherwise>
                     </c:choose>
@@ -170,7 +172,7 @@
 
                 <c:if test="${requestScope.currentPage lt requestScope.noOfPages}">
                     <li class="page-item"><a class="page-link text-dark"
-                                             href="${contextPath}/catalog?shown=${requestScope.recordsPerPage}&page=${requestScope.currentPage+1}">Next</a>
+                                             href="<my:replaceParam name='page' value='${requestScope.currentPage+1}' />">Next</a>
                     </li>
                 </c:if>
             </ul>
@@ -195,7 +197,7 @@
         let optionSelected = $("option:selected", this);
         let valueSelected = this.value;
         let dateBlock = $('#hiddenDate');
-        if (valueSelected === 'publicationDateBefore' || valueSelected === 'publicationDateAfter'){
+        if (valueSelected === 'date_before' || valueSelected === 'date_after'){
             dateBlock.removeAttr("disabled")
         }
         else {

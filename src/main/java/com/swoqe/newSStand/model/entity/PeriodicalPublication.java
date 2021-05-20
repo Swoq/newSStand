@@ -16,7 +16,7 @@ public class PeriodicalPublication {
     private final String publisher;
     private final String description;
     private final Map<String, BigDecimal> pricesPerPeriods;
-    private List<Genre> genres;
+    private final List<Genre> genres;
     private BigDecimal shownPrice;
     private String shownPeriod;
 
