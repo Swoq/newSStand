@@ -1,11 +1,9 @@
 package com.swoqe.newSStand.util;
 
-import com.swoqe.newSStand.model.services.PeriodicalPublicationService;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
 

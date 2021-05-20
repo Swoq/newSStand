@@ -27,15 +27,11 @@
             text-decoration: none !important
         }
 
-        .fa {
-            color: red
-        }
-
         .description {
             overflow: hidden;
             text-overflow: ellipsis;
             display: -webkit-box;
-            -webkit-line-clamp: 6;
+            -webkit-line-clamp: 5;
             -webkit-box-orient: vertical;
         }
 
@@ -69,7 +65,7 @@
                 <div class="col-sm-3 mb-3">
                     <label for="genreMultiSelect">Genres:</label>
                     <select class="custom-select form-control" name="genres[]" id="genreMultiSelect" multiple="multiple"
-                            style="display: none">
+                            style="display: none" >
                         <c:forEach var="genre" items="${requestScope.genres}">
                             <option value="${genre.id}">${genre.name}</option>
                         </c:forEach>
@@ -97,8 +93,18 @@
                     </select>
                 </div>
                 <div class="col-sm-1 mb-3 align-text-bottom">
-                    <label for="btnFilterSubmit">apply</label>
+                    <label for="btnFilterSubmit">Apply Filter</label>
                     <input type="submit" id="btnFilterSubmit" class="btn btn-outline-dark">
+                </div>
+            </div>
+            <div class="form-row d-flex justify-content-end">
+                <div class="input-group col-sm-3 justify-content-end pr-2">
+                    <div class="form-outline">
+                        <input type="search" name="search" id="form1" class="form-control" placeholder="Search by Title" />
+                    </div>
+                    <button type="submit" class="btn btn-outline-dark">
+                        <i class="fa fa-search" aria-hidden="true" ></i>
+                    </button>
                 </div>
             </div>
         </form>
@@ -110,7 +116,7 @@
                     <div class="card card-body mt-3">
                         <div class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
                             <div class="mr-2 mb-3 mb-lg-0">
-                                <img src="${contextPath}/layouts/static/pp_covers/${item.coverImg.getName()}"
+                                <img src="${contextPath}/layouts/static/pp_covers/${item.coverImg == null ? "default.svg" : item.coverImg.getName()}"
                                      class="cover_img" width="150" height="150" alt="">
                             </div>
                             <div class="media-body">
@@ -126,6 +132,8 @@
                                     </c:forEach>
                                 </ul>
                                 <p class="mb-3 description">${item.description}</p>
+                                <p class="text-muted">Dated: ${item.publicationDate}</p>
+
                             </div>
                             <div class="mt-3 mt-lg-0 ml-lg-3 text-center">
                                 <h3 class="mb-0 font-weight-semibold">$${item.shownPrice}</h3>

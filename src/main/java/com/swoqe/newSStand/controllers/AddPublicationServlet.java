@@ -56,7 +56,7 @@ public class AddPublicationServlet extends HttpServlet {
         String[] genres = req.getParameterValues("genres");
         Optional<Part> optionalPart = Optional.ofNullable(req.getPart("cover_file"));
         File file = null;
-        if (optionalPart.isPresent())
+        if (optionalPart.isPresent() && optionalPart.get().getSize() != 0)
             file = Tools.partToFile(optionalPart.get(), getServletContext(), UPLOAD_DIRECTORY);
         List<Genre> genresEntities = genreService.getGenresByNames(genres);
         PeriodicalPublication publication = new PeriodicalPublication.PublicationBuilder()

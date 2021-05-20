@@ -46,7 +46,6 @@ public class PeriodService {
                     periods.add(period);
                 }
             }
-            logger.info("DB | All periods request completed.");
         }catch (SQLException e){
             logger.error(e);
         }
@@ -61,7 +60,6 @@ public class PeriodService {
             ps.setString(2, newPeriod.getDescription());
 
             ps.executeUpdate();
-            logger.info("DB | Period was added to db: {}", newPeriod);
         } catch (SQLException e){
             logger.error(e);
         }
@@ -87,7 +85,6 @@ public class PeriodService {
                 }
             });
             ps.executeBatch();
-            logger.info("DB | Periods with prices were bind to the publication. Map: {}", publication.getPricesPerPeriods());
         }catch (SQLException e){
             logger.error(e);
         }
@@ -111,7 +108,6 @@ public class PeriodService {
                     }
                 }
             }
-            logger.info("DB | For Period id '{}' map was found: {}", id, map);
         }catch (SQLException e){
             logger.error(e);
         }
@@ -140,10 +136,6 @@ public class PeriodService {
         ){
             ps.setInt(1, id);
             optionalPeriod = getOptionalPeriod(ps);
-            if (optionalPeriod.isPresent())
-                logger.info("DB | Period: {} was found by id '{}'", optionalPeriod.get(), id);
-            else
-                logger.info("DB | Period wasn't found by id '{}'", id);
         }catch (SQLException e){
             logger.error(e);
         }

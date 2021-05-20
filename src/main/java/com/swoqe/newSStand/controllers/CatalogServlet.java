@@ -36,8 +36,8 @@ public class CatalogServlet extends HttpServlet {
         String page = req.getParameter("page");
         String[] genresStr = req.getParameterValues("genres[]");
         String orderByStr = req.getParameter("sortBy");
-        String dateStr = req.getParameter("filterDate");
         String directionStr = req.getParameter("direction");
+        String search = req.getParameter("search");
 
         int currentPage = 1;
         int recordsPerPage = 5;
@@ -46,10 +46,7 @@ public class CatalogServlet extends HttpServlet {
             genresIds = Tools.toIntegerArray(genresStr);
         OrderBy orderBy = OrderBy.safeValueOf(orderByStr);
         SortingDirection direction = SortingDirection.safeValueOf(directionStr);
-        LocalDate localDate = LocalDate.now();
         try{
-            if(dateStr != null)
-                localDate = LocalDate.parse(dateStr);
             if(shown != null)
                 recordsPerPage = Integer.parseInt(shown);
             if(page != null)
@@ -64,16 +61,19 @@ public class CatalogServlet extends HttpServlet {
                 .withGenresIds(genresIds)
                 .withOrderBy(orderBy)
                 .withSortingDirection(direction)
-                .withDateToSort(localDate)
                 .build();
 
         PeriodicalPublicationService.PublicationsWrapper data;
-        if(genresIds == null)
-            data = publicationService
-                    .getPublicationsOrderedBy(getServletContext().getRealPath(""), configuration);
-        else
-            data = publicationService
-                    .getPublicationsByGenresOrderedBy(getServletContext().getRealPath(""), configuration);
+        if (search != null && !search.equals(""))
+            data = publicationService.getPublicationsByName(search, getServletContext().getRealPath(""), configuration);
+        else {
+            if(genresIds == null)
+                data = publicationService
+                        .getPublicationsOrderedBy(getServletContext().getRealPath(""), configuration);
+            else
+                data = publicationService
+                        .getPublicationsByGenresOrderedBy(getServletContext().getRealPath(""), configuration);
+        }
 
         int rows = data.getTotalAmount();
         List<PeriodicalPublication> publications = data.getPublications();

@@ -120,7 +120,7 @@ public class NewPublicationFilter implements Filter {
             }
         }
 
-        if(filePart != null) {
+        if(filePart != null && filePart.getSize() != 0) {
             for (String format : ACCEPTABLE_FILE_FORMATS)
                 if (!filePart.getSubmittedFileName().endsWith(format))
                     return "Unacceptable image-file format! (Only jpg & png)";

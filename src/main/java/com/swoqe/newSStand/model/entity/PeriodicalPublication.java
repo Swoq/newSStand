@@ -17,8 +17,8 @@ public class PeriodicalPublication {
     private final String description;
     private final Map<String, BigDecimal> pricesPerPeriods;
     private final List<Genre> genres;
-    private BigDecimal shownPrice;
-    private String shownPeriod;
+    private final BigDecimal shownPrice;
+    private final String shownPeriod;
 
     public PeriodicalPublication(PublicationBuilder publicationBuilder) {
         this.id = publicationBuilder.id;
@@ -28,26 +28,9 @@ public class PeriodicalPublication {
         this.publisher = publicationBuilder.publisher;
         this.pricesPerPeriods = publicationBuilder.pricesPerPeriods;
         this.genres = publicationBuilder.genres;
-        if(this.pricesPerPeriods != null)
-            initShown();
-        else {
-            this.shownPrice = BigDecimal.ZERO;
-            this.shownPeriod = "";
-        }
+        this.shownPrice = publicationBuilder.shownPrice;
+        this.shownPeriod = publicationBuilder.shownPeriod;
         this.description = publicationBuilder.description;
-    }
-
-    private void initShown(){
-        Map.Entry<String, BigDecimal> min = null;
-        for (Map.Entry<String, BigDecimal> entry : this.pricesPerPeriods.entrySet()) {
-            if (min == null || min.getValue().compareTo(entry.getValue()) > 0) {
-                min = entry;
-            }
-        }
-        if (min != null){
-            this.shownPeriod = min.getKey();
-            this.shownPrice = min.getValue();
-        }
     }
 
     public BigDecimal getShownPrice() {
@@ -142,6 +125,8 @@ public class PeriodicalPublication {
         private Map<String, BigDecimal> pricesPerPeriods;
         private List<Genre> genres = new ArrayList<>();
         private String description;
+        private BigDecimal shownPrice;
+        private String shownPeriod;
 
         public PublicationBuilder withId(Long id){
             this.id = id;
@@ -180,6 +165,16 @@ public class PeriodicalPublication {
 
         public PublicationBuilder withGenres(List<Genre> genres){
             this.genres = genres;
+            return this;
+        }
+
+        public PublicationBuilder withShownPrice(BigDecimal shownPrice){
+            this.shownPrice = shownPrice;
+            return this;
+        }
+
+        public PublicationBuilder withShownPeriod(String shownPeriod){
+            this.shownPeriod = shownPeriod;
             return this;
         }
 

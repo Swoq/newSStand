@@ -1,21 +1,17 @@
 package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.Genre;
-import com.swoqe.newSStand.model.entity.Period;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
 import com.swoqe.newSStand.util.DBCPDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
-import java.math.BigDecimal;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
 
 public class GenreService {
     final static Logger logger = LogManager.getLogger(GenreService.class);
@@ -42,7 +38,6 @@ public class GenreService {
                     genres.add(genre);
                 }
             }
-            logger.info("DB | All Genres request.");
         }catch (SQLException e){
             logger.error(e);
         }
@@ -58,7 +53,6 @@ public class GenreService {
             ps.setString(1, genre.getName());
             ps.setString(2, genre.getDescription());
             ps.executeUpdate();
-            logger.info("DB | Genre was added: {}", genre);
         } catch (SQLException e){
             logger.error(e);
         }
@@ -81,7 +75,6 @@ public class GenreService {
                     genres.add(genre);
                 }
             }
-            logger.info("DB | Genres '{}' were found for publication id='{}'", genres, id);
         }catch (SQLException e){
             logger.error(e);
         }
@@ -105,7 +98,6 @@ public class GenreService {
                     genres.add(genre);
                 }
             }
-            logger.info("DB | Genres with names:'{}' were found.", genres);
         }catch (SQLException e){
             logger.error(e);
         }
@@ -129,7 +121,6 @@ public class GenreService {
             });
 
             ps.executeBatch();
-            logger.info("DB | Genres '{}' were bind to the publication with id '{}'.", publication.getGenres(), publication.getId());
         }catch (SQLException e){
             logger.error(e);
         }
