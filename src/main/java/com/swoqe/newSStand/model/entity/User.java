@@ -1,11 +1,11 @@
 package com.swoqe.newSStand.model.entity;
 
 import java.io.Serializable;
+import java.math.BigDecimal;
 import java.util.Objects;
 
 public class User implements Serializable{
 
-    private static final long serialVersionUID = 6297385302078200511L;
 
     private Long id;
     private String firstName;
@@ -15,6 +15,7 @@ public class User implements Serializable{
     private boolean locked = false;
     private boolean enable = true;
     private String email;
+    private BigDecimal account;
 
     public User(String firstName, String lastName, String password, UserRole userRole, String email) {
         this.firstName = firstName;
@@ -27,8 +28,12 @@ public class User implements Serializable{
     public User() {
     }
 
-    public static long getSerialVersionUID() {
-        return serialVersionUID;
+    public BigDecimal getAccount() {
+        return account;
+    }
+
+    public void setAccount(BigDecimal account) {
+        this.account = account;
     }
 
     public Long getId() {

@@ -61,7 +61,7 @@ public class UserService {
     }
 
     public Optional<User> getUserByEmailAndPassword(String email, String password){
-        String GET_USER_BY_EMAIL_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email " +
+        String GET_USER_BY_EMAIL_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email, account " +
                 "from users where email=? and password=?";
         try (
                 Connection connection = DBCPDataSource.getConnection();
@@ -81,8 +81,40 @@ public class UserService {
                 user.setLocked(resultSet.getBoolean("locked"));
                 user.setEnable(resultSet.getBoolean("enable"));
                 user.setEmail(resultSet.getString("email"));
+                user.setAccount(resultSet.getBigDecimal("account"));
 
                 logger.info("DB | User with email " + email + " was found | " + user);
+                return Optional.of(user);
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return Optional.empty();
+    }
+
+    public Optional<User> getUserById(Long id){
+        String GET_USER_BY_ID_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email, account " +
+                "from users where id=?";
+        try (
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_SQL)
+        ){
+            preparedStatement.setLong(1, id);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (!resultSet.next())
+                    return Optional.empty();
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setFirstName(resultSet.getString("first_name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setPassword(resultSet.getString("password"));
+                user.setUserRole(UserRole.valueOf(resultSet.getString("role")));
+                user.setLocked(resultSet.getBoolean("locked"));
+                user.setEnable(resultSet.getBoolean("enable"));
+                user.setEmail(resultSet.getString("email"));
+                user.setAccount(resultSet.getBigDecimal("account"));
+
+                logger.info("DB | User with id: {} was found ", id);
                 return Optional.of(user);
             }
         } catch (SQLException e) {

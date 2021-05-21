@@ -100,7 +100,6 @@
     </div>
 </div>
 
-<%@ include file = "static/templates/footer.html" %>
 
 <!-- HIDDEN DYNAMIC ELEMENT TO CLONE -->
 <!-- you can replace it with any other elements -->
@@ -134,6 +133,7 @@
     </div>
 </div>
 <!-- END OF HIDDEN ELEMENT -->
+<%@ include file = "static/templates/footer.html" %>
 
 <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"

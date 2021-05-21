@@ -78,6 +78,7 @@
                                 data-target="#adminModal">Admin Panel</button>
                         <%--Modal--%>
                     </c:if>
+                    <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/account">Account</a>
                     <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/logout">Logout</a>
                 </div>
             </c:if>
