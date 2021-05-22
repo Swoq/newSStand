@@ -3,31 +3,18 @@
          xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
          xsi:schemaLocation="http://xmlns.jcp.org/xml/ns/javaee http://xmlns.jcp.org/xml/ns/javaee/web-app_4_0.xsd"
          version="4.0">
-    <context-param>
-        <param-name>dbUser</param-name>
-        <param-value>postgres</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbPassword</param-name>
-        <param-value>1</param-value>
-    </context-param>
-    <context-param>
-        <param-name>dbURL</param-name>
-        <param-value>jdbc:postgresql://localhost:5432/newsstand</param-value>
-    </context-param>
-    <context-param>
-        <param-name>tempfile.dir</param-name>
-        <param-value>tmpfiles</param-value>
-    </context-param>
-
-<!--    <error-page>-->
-<!--        <error-code>404</error-code>-->
-<!--        <location>/AppErrorHandler</location>-->
-<!--    </error-page>-->
-<!--    <error-page>-->
-<!--        <exception-type>java.lang.Throwable</exception-type>-->
-<!--        <location>/AppErrorHandler</location>-->
-<!--    </error-page>-->
+    <error-page>
+        <error-code>404</error-code>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>javax.servlet.ServletException</exception-type>
+        <location>/errorHandler</location>
+    </error-page>
+    <error-page>
+        <exception-type>java.lang.Throwable</exception-type>
+        <location>/errorHandler</location>
+    </error-page>
     
     <servlet-mapping>
         <servlet-name>default</servlet-name>

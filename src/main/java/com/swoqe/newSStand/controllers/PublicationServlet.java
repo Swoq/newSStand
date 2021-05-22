@@ -40,7 +40,7 @@ public class PublicationServlet extends HttpServlet {
                 requestDispatcher.forward(req, resp);
             }
             else
-                resp.sendRedirect("/catalog");
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
 
         }catch (NumberFormatException e){
             logger.error(e);

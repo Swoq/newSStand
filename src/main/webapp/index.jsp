@@ -15,7 +15,7 @@
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
 
     <!-- Bootstrap core CSS -->
-    <link href="<c:url value="layouts/static/styles/bootstrap.min.css"/>" rel="stylesheet">
+    <link href="${contextPath}/layouts/static/styles/bootstrap.min.css" rel="stylesheet">
 
     <style>
         .bd-placeholder-img {
@@ -46,7 +46,7 @@
     <!-- Custom styles for this template -->
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <!-- Custom styles for this template -->
-    <link href="<c:url value="layouts/static/styles/blog.css"/>" rel="stylesheet">
+    <link href="${contextPath}/layouts/static/styles/blog.css" rel="stylesheet">
 </head>
 <body>
 
@@ -58,7 +58,7 @@
         <div class="col-md-6 px-0">
             <h1 class="display-4 font-italic">Dive into periodical publication world</h1>
             <p class="lead my-3">With NewSStand you will receive fresh newspapers, comics, magazines and even professional journals</p>
-            <p class="lead mb-0"><a href="<c:url value="/catalog"/>" class="text-white font-weight-bold">- Choose something for yourself -</a></p>
+            <p class="lead mb-0"><a href="${contextPath}/catalog" class="text-white font-weight-bold">- Choose something for yourself -</a></p>
         </div>
     </div>
 
@@ -222,7 +222,7 @@
             </div>
             <div class="modal-body">
                 <div class="d-flex flex-column">
-                    <a class="btn btn-sm mb-4 btn-outline-secondary" href="<c:url value="/catalog/add"/>">Add new publication</a>
+                    <a class="btn btn-sm mb-4 btn-outline-secondary" href="${contextPath}/catalog/add" >Add new publication</a>
                     <form action="#" method="get">
                         <div class="input-group mb-3">
                             <input type="text" class="form-control" placeholder="Email to block" aria-label="Recipient's username" aria-describedby="basic-addon2">
@@ -258,6 +258,6 @@
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
-<script src="<c:url value="layouts/static/js/bootstrap.bundle.min.js" />"></script>
+<script src="${contextPath}/layouts/static/js/bootstrap.bundle.min.js" ></script>
 </body>
 </html>

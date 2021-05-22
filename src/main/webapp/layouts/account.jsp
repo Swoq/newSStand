@@ -93,7 +93,7 @@
                 <div class="input-group m-1 p-2">
                     <input type="number" class="form-control" placeholder="$ Amount" name="amount" step="0.01" min=0>
                     <div class="input-group-append">
-                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Button</button>
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Submit</button>
                     </div>
                 </div>
             </form>
