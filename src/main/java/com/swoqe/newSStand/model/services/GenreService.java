@@ -2,7 +2,7 @@ package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
-import com.swoqe.newSStand.util.DBCPDataSource;
+import com.swoqe.newSStand.util.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -25,7 +25,7 @@ public class GenreService {
     public List<Genre> getAllGenres() {
         List<Genre> genres = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_ALL_GENRES)
         ){
             try(ResultSet rs = ps.executeQuery()){
@@ -47,7 +47,7 @@ public class GenreService {
 
     public void addNewGenre(Genre genre){
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(ADD_NEW_GENRE)
         ){
             ps.setString(1, genre.getName());
@@ -61,7 +61,7 @@ public class GenreService {
     public List<Genre> getGenresByPublicationId(Long id) {
         List<Genre> genres = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_GENRES_BY_PUBLICATION_ID)
         ){
             ps.setLong(1, id);
@@ -84,7 +84,7 @@ public class GenreService {
     public List<Genre> getGenresByNames(String[] genresStrings) {
         List<Genre> genres = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_GENRES_BY_NAMES)
         ){
             ps.setArray(1, connection.createArrayOf("text", genresStrings));
@@ -106,7 +106,7 @@ public class GenreService {
 
     public void insertPublicationGenres(PeriodicalPublication publication) {
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(INSERT_PUBLICATION_GENRES)
         ){
             List<Genre> genres = publication.getGenres();

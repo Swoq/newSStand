@@ -79,12 +79,29 @@
             </div>
             <form id="rateForm" method="post" action="${contextPath}/subscriptions/add">
                 <div class="modal-body">
-                    <p>Cost of subscription will be withdrawn from you account.</p>
+                    <c:choose>
+                        <c:when test="${sessionScope.user != null}">
+                            <p>Cost of subscription will be withdrawn from you account.</p>
+                        </c:when>
+                        <c:otherwise>
+                            <p><b>SIGN IN</b> or <b>SIGN UP</b> to be able to subsribe to publication!</p>
+                        </c:otherwise>
+                    </c:choose>
+
                     <input type="hidden" id="hiddenRateInput" name="rateId">
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-dark" >Confirm</button>
+                    <button type="submit" class="btn btn-dark" >
+                        <c:choose>
+                            <c:when test="${sessionScope.user != null}">
+                                Confirm
+                            </c:when>
+                            <c:otherwise>
+                                SIGN IN
+                            </c:otherwise>
+                        </c:choose>
+                    </button>
                 </div>
             </form>
         </div>

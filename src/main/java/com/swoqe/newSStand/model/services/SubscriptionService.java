@@ -1,10 +1,9 @@
 package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.Period;
-import com.swoqe.newSStand.model.entity.Rate;
 import com.swoqe.newSStand.model.entity.Subscription;
 import com.swoqe.newSStand.model.entity.User;
-import com.swoqe.newSStand.util.DBCPDataSource;
+import com.swoqe.newSStand.util.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -53,7 +52,7 @@ public class SubscriptionService {
     public List<Subscription> getSubscriptionsByUser(User user) {
         List<Subscription> subscriptions = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_SUBSCRIPTIONS_BY_USER_ID)
         ){
             ps.setLong(1, user.getId());
@@ -84,7 +83,7 @@ public class SubscriptionService {
 
     public Optional<Subscription> getSubscriptionByUserIdAndRateId(User user, Long rateId) {
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_SUBSCRIPTION_BY_USER_ID_AND_RATE_ID)
         ){
             ps.setLong(1, user.getId());
@@ -115,7 +114,7 @@ public class SubscriptionService {
 
     public Optional<Subscription> getSubscriptionByUserIdAndId(User user, Long subscriptionId) {
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_SUBSCRIPTION_BY_USER_ID_AND_ID)
         ){
             ps.setLong(1, user.getId());
@@ -146,7 +145,7 @@ public class SubscriptionService {
 
     public void doUserSubscribe(Long userId, Long rateId){
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 CallableStatement cs = connection.prepareCall("CALL do_user_subscription(?, ?)");
         ){
             cs.setLong(1, userId);
@@ -163,7 +162,7 @@ public class SubscriptionService {
 
     public void doUserCancelSubscription(Long userId, Long subscriptionId) {
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 CallableStatement cs = connection.prepareCall("CALL do_user_cancel_subscription(?, ?)");
         ){
             cs.setLong(1, userId);

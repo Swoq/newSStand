@@ -3,7 +3,7 @@ package com.swoqe.newSStand.model.services;
 import com.swoqe.newSStand.model.entity.Period;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
 import com.swoqe.newSStand.model.entity.Rate;
-import com.swoqe.newSStand.util.DBCPDataSource;
+import com.swoqe.newSStand.util.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -44,7 +44,7 @@ public class PeriodService {
     public List<Period> getAllPeriods(){
         List<Period> periods = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_ALL_PERIODS)
         ){
             try(ResultSet rs = ps.executeQuery()){
@@ -64,8 +64,10 @@ public class PeriodService {
     }
 
     public void addNewPeriod(Period newPeriod){
-        try(Connection connection = DBCPDataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement(ADD_NEW_PERIOD)){
+        try(
+                Connection connection = ConnectionPool.getInstance().getConnection();
+                PreparedStatement ps = connection.prepareStatement(ADD_NEW_PERIOD)
+        ){
 
             ps.setString(1, newPeriod.getName());
             ps.setString(2, newPeriod.getDescription());
@@ -78,7 +80,7 @@ public class PeriodService {
 
     public void insertPublicationPeriods(PeriodicalPublication publication){
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(ADD_PERIOD_BY_ID)
         ){
             Map<String, BigDecimal> periodsPrices = publication.getPricesPerPeriods();
@@ -104,7 +106,7 @@ public class PeriodService {
     public Map<String, BigDecimal> getPeriodsMapByPublicationId(Long id){
         Map<String, BigDecimal> map = new HashMap<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_PERIODS_ID_BY_PUBLICATION_ID)
         ){
             ps.setLong(1, id);
@@ -128,7 +130,7 @@ public class PeriodService {
     public List<Rate> getRatesByPublicationId(Long id){
         List<Rate> rates = new ArrayList<>();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_RATES_BY_PUBLICATION_ID)
         ){
             ps.setLong(1, id);
@@ -152,7 +154,7 @@ public class PeriodService {
 
     public Optional<Rate> getRateById(Long id){
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_RATES_BY_ID);
         ){
             ps.setLong(1, id);
@@ -178,7 +180,7 @@ public class PeriodService {
     public Optional<Period> getPeriodByName(String name){
         Optional<Period> optionalPeriod = Optional.empty();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_PERIOD_BY_NAME)
         ){
             ps.setString(1, name);
@@ -192,7 +194,7 @@ public class PeriodService {
     public Optional<Period> getPeriodById(int id){
         Optional<Period> optionalPeriod = Optional.empty();
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_PERIOD_BY_ID)
         ){
             ps.setInt(1, id);

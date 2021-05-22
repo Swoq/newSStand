@@ -2,7 +2,7 @@ package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.User;
 import com.swoqe.newSStand.model.entity.UserRole;
-import com.swoqe.newSStand.util.DBCPDataSource;
+import com.swoqe.newSStand.util.ConnectionPool;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -20,7 +20,7 @@ public class UserService {
                 "  (first_name, last_name, password, role, locked, enable, email) VALUES " +
                 " (?,?,?,?,?,?,?);";
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(INSERT_USER_SQL)
         ){
             preparedStatement.setString(1, user.getFirstName());
@@ -42,7 +42,7 @@ public class UserService {
         String GET_USER_BY_EMAIL_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email " +
                 "from users where email=?";
         try (
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL_SQL)
         ){
             preparedStatement.setString(1, email);
@@ -64,7 +64,7 @@ public class UserService {
         String GET_USER_BY_EMAIL_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email, account " +
                 "from users where email=? and password=?";
         try (
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL_SQL)
         ){
             preparedStatement.setString(1, email);
@@ -96,7 +96,7 @@ public class UserService {
         String GET_USER_BY_ID_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email, account " +
                 "from users where id=?";
         try (
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_ID_SQL)
         ){
             preparedStatement.setLong(1, id);
@@ -131,7 +131,7 @@ public class UserService {
                 "email=?, account=? " +
                 "where id=? ";
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_SQL)
         ){
             preparedStatement.setString(1, user.getFirstName());

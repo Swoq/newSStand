@@ -67,7 +67,7 @@ public class PeriodicalPublicationService {
 
     public void addPublication(PeriodicalPublication publication){
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(ADD_PUBLICATION, Statement.RETURN_GENERATED_KEYS)
         ){
             ps.setString(1, publication.getName());
@@ -114,7 +114,7 @@ public class PeriodicalPublicationService {
 
         String query = String.format(GET_N_PUBLICATIONS, orderBy.toString().toLowerCase(), direction.toString().toLowerCase());
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(query)
         ){
             ps.setInt(1, recordsPerPage);
@@ -137,7 +137,7 @@ public class PeriodicalPublicationService {
         int start = pageNumber * recordsPerPage - recordsPerPage;
         String finalQuery = String.format(GET_N_PUBLICATIONS_BY_GENRES, orderBy.toString().toLowerCase(), direction.toString().toLowerCase());
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(finalQuery)
         ){
             ps.setArray(1, connection.createArrayOf("int", genresIds));
@@ -157,7 +157,7 @@ public class PeriodicalPublicationService {
         PublicationsWrapper wrapper = new PublicationsWrapper();
         int start = pageNumber * recordsPerPage - recordsPerPage;
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_PUBLICATIONS_BY_NAME)
         ){
             name = name
@@ -180,7 +180,7 @@ public class PeriodicalPublicationService {
 
     public Optional<PeriodicalPublication> getPublicationById(Long id, String realPath) {
         try(
-                Connection connection = DBCPDataSource.getConnection();
+                Connection connection = ConnectionPool.getInstance().getConnection();
                 PreparedStatement ps = connection.prepareStatement(GET_PUBLICATION_BY_ID)
         ){
             ps.setLong(1, id);
