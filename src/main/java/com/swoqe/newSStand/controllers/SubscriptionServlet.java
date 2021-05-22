@@ -27,7 +27,7 @@ public class SubscriptionServlet extends HttpServlet {
     private final SubscriptionService subscriptionService = new SubscriptionService();
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
 
         switch (uri){
@@ -73,9 +73,27 @@ public class SubscriptionServlet extends HttpServlet {
 
     private void doSubscriptionsDelete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
         User sessionUser = (User) req.getSession().getAttribute("user");
-        Optional<User> user = userService.getUserById(sessionUser.getId());
-        if (user.isPresent()){
-
+        Optional<User> optionalUser = userService.getUserById(sessionUser.getId());
+        if (optionalUser.isPresent()){
+            try{
+                HttpSession session = req.getSession(false);
+                User user = optionalUser.get();
+                Long subscriptionId = Long.parseLong(req.getParameter("subscriptionId"));
+                Optional<Subscription> optionalSubscription = subscriptionService.getSubscriptionByUserIdAndId(user, subscriptionId);
+                if(optionalSubscription.isPresent()){
+                    subscriptionService.doUserCancelSubscription(user.getId(), optionalSubscription.get().getId());
+                    session.setAttribute("message", "Subscription has been canceled successfully!");
+                }
+                else{
+                    session.setAttribute("error", "Something went wrong. \n" +
+                            "Information about your problem has already been sent to administration.");
+                }
+                resp.sendRedirect("/account");
+            }
+            catch (NumberFormatException e){
+                logger.error(e);
+                resp.sendRedirect("/catalog");
+            }
         }
         else {
             resp.sendRedirect("/login");

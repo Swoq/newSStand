@@ -77,13 +77,16 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <div class="modal-body">
-                <p>Cost of subscription will be withdrawn from you account.</p>
-            </div>
-            <div class="modal-footer">
-                <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
-                <a id="rateFieldButton" class="btn btn-dark" >Confirm</a>
-            </div>
+            <form id="rateForm" method="post" action="${contextPath}/subscriptions/add">
+                <div class="modal-body">
+                    <p>Cost of subscription will be withdrawn from you account.</p>
+                    <input type="hidden" id="hiddenRateInput" name="rateId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-dark" >Confirm</button>
+                </div>
+            </form>
         </div>
     </div>
 </div>
@@ -99,7 +102,7 @@
         let button = $(event.relatedTarget)
         let rateId = button.data('rate')
         let modal = $(this)
-        modal.find('#rateFieldButton').attr("href", "${contextPath}/subscriptions/add?rateId="+rateId);
+        modal.find('#hiddenRateInput').attr("value", rateId);
     })
 </script>
 </body>

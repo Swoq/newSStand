@@ -24,8 +24,9 @@ public class SubscriptionService {
             "join users u on u.id = up.user_id \n" +
             "join publication_periods pp on up.rate_id = pp.id \n" +
             "join periodical_publications publication on pp.publication_id = publication.id \n" +
-            "join periods p on p.id = pp.period_id \n" +
-            "where user_id=? ";
+            "join periods p on p.id = pp.period_id " +
+            "where user_id=? and end_date >= date(now()) \n" +
+            "order by end_date ";
 
     private final String GET_SUBSCRIPTION_BY_USER_ID_AND_RATE_ID = "select up.id as sub_id, publication.name as publ_name, " +
             "publication.id as publ_id, " +
@@ -37,6 +38,17 @@ public class SubscriptionService {
             "join periodical_publications publication on pp.publication_id = publication.id \n" +
             "join periods p on p.id = pp.period_id \n" +
             "where user_id=? and rate_id=? limit 1";
+
+    private final String GET_SUBSCRIPTION_BY_USER_ID_AND_ID = "select up.id as sub_id, publication.name as publ_name, " +
+            "publication.id as publ_id, " +
+            "p.name as period_name, p.id as period_id, " +
+            "p.description as period_description, pp.price as sub_price, up.start_date, up.end_date \n" +
+            "from user_publications up \n" +
+            "join users u on u.id = up.user_id \n" +
+            "join publication_periods pp on up.rate_id = pp.id \n" +
+            "join periodical_publications publication on pp.publication_id = publication.id \n" +
+            "join periods p on p.id = pp.period_id \n" +
+            "where user_id=? and up.id=? ";
 
     public List<Subscription> getSubscriptionsByUser(User user) {
         List<Subscription> subscriptions = new ArrayList<>();
@@ -101,6 +113,37 @@ public class SubscriptionService {
         return Optional.empty();
     }
 
+    public Optional<Subscription> getSubscriptionByUserIdAndId(User user, Long subscriptionId) {
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_SUBSCRIPTION_BY_USER_ID_AND_ID)
+        ){
+            ps.setLong(1, user.getId());
+            ps.setLong(2, subscriptionId);
+            try(ResultSet rs = ps.executeQuery()){
+                rs.next();
+                Period period = new Period();
+                period.setId(rs.getInt("period_id"));
+                period.setName(rs.getString("period_name"));
+                period.setDescription(rs.getString("period_description"));
+                Subscription subscription = new Subscription(
+                        rs.getLong("sub_id"),
+                        user,
+                        rs.getString("publ_name"),
+                        rs.getLong("publ_id"),
+                        period,
+                        rs.getBigDecimal("sub_price"),
+                        rs.getDate("start_date").toLocalDate(),
+                        rs.getDate("end_date").toLocalDate()
+                );
+                return Optional.of(subscription);
+            }
+        }catch (SQLException e){
+            logger.error(e);
+        }
+        return Optional.empty();
+    }
+
     public void doUserSubscribe(Long userId, Long rateId){
         try(
                 Connection connection = DBCPDataSource.getConnection();
@@ -118,4 +161,19 @@ public class SubscriptionService {
     }
 
 
+    public void doUserCancelSubscription(Long userId, Long subscriptionId) {
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                CallableStatement cs = connection.prepareCall("CALL do_user_cancel_subscription(?, ?)");
+        ){
+            cs.setLong(1, userId);
+            cs.setLong(2, subscriptionId);
+
+            cs.executeUpdate();
+            logger.info("Subscription {} was canceled to {}", subscriptionId, userId);
+        }
+        catch (SQLException e){
+            logger.error(e);
+        }
+    }
 }

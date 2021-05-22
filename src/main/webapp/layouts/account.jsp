@@ -1,6 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
+<%@ page import="java.time.LocalDate" %>
 
 <html>
 <head>
@@ -40,7 +41,7 @@
             <c:remove var="error" scope="session" />
         </c:when>
     </c:choose>
-    <p>Attention! Subscription fees are charged at 00:00 on the day the subscription starts.</p>
+    <p>Attention! Subscription cancels next day, after confirmation.</p>
 
     <div class="container mb-4">
         <div class="row mb-2">
@@ -54,8 +55,19 @@
                 Refuse
             </div>
         </div>
+
         <c:forEach var="subscription" items="${requestScope.subscriptions}">
-            <div class="row mb-2">
+            <c:set var="tag" value="" scope="page"/>
+            <c:choose>
+                <c:when test="${subscription.endDate.compareTo(LocalDate.now().plusWeeks(1)) < 0}">
+                    <c:set var="tag" value="bg-warning"/>
+                </c:when>
+                <c:otherwise>
+                    <c:set var="tag" value="bg-info"/>
+                </c:otherwise>
+            </c:choose>
+
+            <div class="row mb-2 ${tag}">
                 <div class="col-1 themed-grid-col">${subscription.id}</div>
                 <div class="col-2 themed-grid-col"><a class="text-dark" href="${contextPath}/publication?id=${subscription.publicationId}"><u>${subscription.publicationName}</u></a></div>
                 <div class="col-2 themed-grid-col">${subscription.startDate}</div>
@@ -63,7 +75,8 @@
                 <div class="col-2 themed-grid-col">${subscription.price}$</div>
                 <div class="col-2 themed-grid-col">${subscription.period.name}</div>
                 <div class="col-1 themed-grid-col">
-                    <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/account">cancel</a>
+                    <button class="btn btn-sm ml-1 btn-secondary"
+                            data-toggle="modal" data-target="#cancelModal" data-subscription="${subscription.id}">cancel</button>
                 </div>
             </div>
         </c:forEach>
@@ -88,10 +101,42 @@
     </div>
 </div>
 
+<!-- Modal -->
+<div class="modal fade" id="cancelModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Are you sure want to cancel subscription?</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="subscriptionForm" method="post" action="${contextPath}/subscriptions/delete">
+                <div class="modal-body">
+                    <p>Cost of subscription <b>won't</b> be returned to your personal account.</p>
+                    <input type="hidden" id="hiddenSubscriptionInput" name="subscriptionId">
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-light" data-dismiss="modal">Close</button>
+                    <button type="submit" class="btn btn-dark" >Confirm</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
 <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"
         integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
         crossorigin="anonymous"></script>
 <script src="<c:url value="layouts/static/js/bootstrap.bundle.min.js" />"></script>
+<script>
+    $('#cancelModal').on('show.bs.modal', function (event) {
+        let button = $(event.relatedTarget)
+        let subscriptionId = button.data('subscription')
+        let modal = $(this)
+        modal.find('#hiddenSubscriptionInput').attr("value", subscriptionId);
+    })
+</script>
 </body>
 </html>
