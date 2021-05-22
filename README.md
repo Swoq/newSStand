@@ -1,8 +1,7 @@
 # newSStand
 **Pet-project for EPAM Java Online Program**
-The system has a list of publications that
 
-grouped by topic.
+The system has a list of publications that grouped by topic.
 The reader can subscribe to one or more publications. For a list of publications
 it is necessary to realize the possibility:
 - sorting publications by title;
