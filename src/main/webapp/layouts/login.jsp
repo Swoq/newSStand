@@ -150,9 +150,7 @@
         <input type="submit" class="btn btn-primary btn-block btn-lg" value="Login">
     </form>
     <div class="text-center small">Don't have an account? <a href="<c:url value="/registration"/>">Sign up</a></div>
+    <div class="text-center"><a style="color: dimgrey" href="<c:url value="/"/>">Main Page</a></div>
 </div>
-
-
-
 </body>
 </html>

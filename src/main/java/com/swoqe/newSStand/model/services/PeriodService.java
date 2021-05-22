@@ -2,6 +2,7 @@ package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.Period;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
+import com.swoqe.newSStand.model.entity.Rate;
 import com.swoqe.newSStand.util.DBCPDataSource;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -27,8 +28,18 @@ public class PeriodService {
 
     private final String GET_PERIOD_BY_ID = "select id, name, description from periods where id=?";
 
-    private final String GET_PERIODS_BY_PUBLICATION_ID = "select period_id, price from publication_periods " +
+    private final String GET_PERIODS_ID_BY_PUBLICATION_ID = "select period_id, price from publication_periods " +
             "where publication_id=?";
+
+    private final String GET_RATES_BY_PUBLICATION_ID = "select p.id as period_id, p.name, p.description, pp.price, pp.id " +
+            "from publication_periods pp \n" +
+            "join periods p on p.id = pp.period_id \n" +
+            "where publication_id=? order by price ";
+
+    private final String GET_RATES_BY_ID = "select p.id as period_id, p.name, p.description, pp.price, pp.id " +
+            "from publication_periods pp \n" +
+            "join periods p on p.id = pp.period_id \n" +
+            "where pp.id=? ";
 
     public List<Period> getAllPeriods(){
         List<Period> periods = new ArrayList<>();
@@ -90,11 +101,11 @@ public class PeriodService {
         }
     }
 
-    public Map<String, BigDecimal> getPeriodsByPublicationId(Long id){
+    public Map<String, BigDecimal> getPeriodsMapByPublicationId(Long id){
         Map<String, BigDecimal> map = new HashMap<>();
         try(
                 Connection connection = DBCPDataSource.getConnection();
-                PreparedStatement ps = connection.prepareStatement(GET_PERIODS_BY_PUBLICATION_ID)
+                PreparedStatement ps = connection.prepareStatement(GET_PERIODS_ID_BY_PUBLICATION_ID)
         ){
             ps.setLong(1, id);
             try(ResultSet resultSet = ps.executeQuery()){
@@ -112,6 +123,56 @@ public class PeriodService {
             logger.error(e);
         }
         return map;
+    }
+
+    public List<Rate> getRatesByPublicationId(Long id){
+        List<Rate> rates = new ArrayList<>();
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_RATES_BY_PUBLICATION_ID)
+        ){
+            ps.setLong(1, id);
+            try(ResultSet resultSet = ps.executeQuery()){
+                while(resultSet.next()){
+                    Long rateId = resultSet.getLong("id");
+                    int periodId = resultSet.getInt("period_id");
+                    BigDecimal price = resultSet.getBigDecimal("price");
+                    String name = resultSet.getString("name");
+                    String description = resultSet.getString("description");
+                    Period period = new Period(periodId, name, description);
+                    Rate rate = new Rate(rateId, period, id, price);
+                    rates.add(rate);
+                }
+            }
+        }catch (SQLException e){
+            logger.error(e);
+        }
+        return rates;
+    }
+
+    public Optional<Rate> getRateById(Long id){
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_RATES_BY_ID);
+        ){
+            ps.setLong(1, id);
+            try (ResultSet resultSet = ps.executeQuery()){
+                resultSet.next();
+
+                Long rateId = resultSet.getLong("id");
+                int periodId = resultSet.getInt("period_id");
+                BigDecimal price = resultSet.getBigDecimal("price");
+                String name = resultSet.getString("name");
+                String description = resultSet.getString("description");
+                Period period = new Period(periodId, name, description);
+                Rate rate = new Rate(rateId, period, id, price);
+                return Optional.of(rate);
+            }
+        }
+        catch (SQLException e){
+            logger.error(e);
+        }
+        return Optional.empty();
     }
 
     public Optional<Period> getPeriodByName(String name){

@@ -24,8 +24,16 @@ public class PeriodicalPublicationService {
             "(id, name, publication_date, cover_img, publisher, img_name, description) " +
             "values (DEFAULT, ?, ?, ?, ?, ?, ?)";
 
-    private final String GET_PUBLICATIONS_BY_NAME = "SELECT id, name, publication_date, cover_img, publisher, img_name, description, count(*) OVER() AS total_count " +
-            "from periodical_publications where name ilike ? ESCAPE '!' limit ? offset ?";
+    private final String GET_PUBLICATIONS_BY_NAME = "select publications.*, t.price, p.name as period_name, count(*) OVER() AS total_count\n" +
+            "from publication_periods pp\n" +
+            "join (\n" +
+            "    select publication_id, min(price) as price\n" +
+            "    from publication_periods\n" +
+            "    group by publication_id\n" +
+            ") t on pp.publication_id = t.publication_id and pp.price = t.price\n" +
+            "join periods p on p.id = pp.period_id\n" +
+            "join periodical_publications publications on publications.id = pp.publication_id\n" +
+            "where publications.name ilike ? ESCAPE '!' limit ? offset ? ";
 
     private final String GET_N_PUBLICATIONS_BY_GENRES = "select publications.*, t.price, p.name as period_name, count(*) OVER() AS total_count \n" +
             "from publication_periods pp\n" +
@@ -51,6 +59,10 @@ public class PeriodicalPublicationService {
             "join periodical_publications publications on publications.id = pp.publication_id\n" +
             "order by %s %s \n" +
             "limit ? offset ? ";
+
+    private final String GET_PUBLICATION_BY_ID = "select id, name, publication_date, " +
+            "cover_img, publisher, img_name, description, 1 AS total_count, '' as period_name, cast('0' as money) as price " +
+            "from periodical_publications where id=? ";
 
 
     public void addPublication(PeriodicalPublication publication){
@@ -166,6 +178,25 @@ public class PeriodicalPublicationService {
         return wrapper;
     }
 
+    public Optional<PeriodicalPublication> getPublicationById(Long id, String realPath) {
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement ps = connection.prepareStatement(GET_PUBLICATION_BY_ID)
+        ){
+            ps.setLong(1, id);
+            PublicationsWrapper wrapper = receivePublications(ps, realPath);
+            if(wrapper.getPublications().size() == 0)
+                return Optional.empty();
+            else
+                return Optional.of(wrapper.getPublications().get(0));
+
+        } catch (SQLException e){
+            logger.error(e);
+        }
+
+        return Optional.empty();
+    }
+
     private PublicationsWrapper receivePublications(PreparedStatement ps, String realPath){
         List<PeriodicalPublication> publications = new ArrayList<>();
         int totalAmount = 0;
@@ -181,7 +212,7 @@ public class PeriodicalPublicationService {
                     file = new File(realPath + File.separator + UPLOAD_DIRECTORY + File.separator + "default.svg");
                 totalAmount = resultSet.getInt("total_count");
                 Long id = resultSet.getLong("id");
-                Map<String, BigDecimal> prices = periodService.getPeriodsByPublicationId(id);
+                Map<String, BigDecimal> prices = periodService.getPeriodsMapByPublicationId(id);
                 List<Genre> genres = genreService.getGenresByPublicationId(id);
                 PeriodicalPublication p = new PeriodicalPublication.PublicationBuilder()
                         .withId(id)
@@ -202,6 +233,8 @@ public class PeriodicalPublicationService {
         }
         return new PublicationsWrapper(publications, totalAmount);
     }
+
+
 
     public static class PublicationsWrapper{
         private List<PeriodicalPublication> publications;

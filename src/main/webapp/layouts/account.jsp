@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
-    <link href="${contextPath}/layouts/static/styles/account.css" rel="stylesheet">
+    <link href="${contextPath}/layouts/static/styles/grid.css" rel="stylesheet">
 </head>
 <body>
 
@@ -26,29 +26,67 @@
         <div class="col-6 justify-content-end d-flex">
             <h5 class="mt-4 pr-4 align-self-center">Balance:</h5>
             <h1 class="badge badge-dark mt-4 align-self-center" style="font-size: 150%">${requestScope.user.account}$</h1>
+            <button type="button" class="btn btn-sm mt-4 ml-1 mb-1 btn-outline-secondary align-self-center" data-toggle="modal" data-target="#replenishModal">replenish</button>
         </div>
     </div>
 
-
+    <c:choose>
+        <c:when test="${sessionScope.message != null}">
+            <p class="text-success" style="text-align: center"><c:out value="${sessionScope.message}" /></p>
+            <c:remove var="message" scope="session" />
+        </c:when>
+        <c:when test="${sessionScope.error != null}">
+            <p class="text-warning" style="text-align: center"><c:out value="${sessionScope.error}" /></p>
+            <c:remove var="error" scope="session" />
+        </c:when>
+    </c:choose>
     <p>Attention! Subscription fees are charged at 00:00 on the day the subscription starts.</p>
 
-
-    <c:forEach var="subscription" items="${requestScope.subscriptions}">
+    <div class="container mb-4">
         <div class="row mb-2">
-            <div class="col-1 themed-grid-col">${subscription.id}</div>
-            <div class="col-2 themed-grid-col">${subscription.publicationName}</div>
-            <div class="col-2 themed-grid-col">${subscription.period.name}</div>
-            <div class="col-2 themed-grid-col">${subscription.startDate}</div>
-            <div class="col-2 themed-grid-col">${subscription.endDate}</div>
-            <div class="col-2 themed-grid-col">${subscription.price}$</div>
-            <div class="col-1 themed-grid-col">
-                <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/account">cancer</a>
+            <div class="col-1 themed-grid-col header font-weight-bold">№</div>
+            <div class="col-2 themed-grid-col header font-weight-bold">Publication name</div>
+            <div class="col-2 themed-grid-col header font-weight-bold">Subscription start</div>
+            <div class="col-2 themed-grid-col header font-weight-bold">Subscription end</div>
+            <div class="col-2 themed-grid-col header font-weight-bold">Price</div>
+            <div class="col-2 themed-grid-col header font-weight-bold">per period</div>
+            <div class="col-1 themed-grid-col header font-weight-bold">
+                Refuse
             </div>
         </div>
-    </c:forEach>
+        <c:forEach var="subscription" items="${requestScope.subscriptions}">
+            <div class="row mb-2">
+                <div class="col-1 themed-grid-col">${subscription.id}</div>
+                <div class="col-2 themed-grid-col"><a class="text-dark" href="${contextPath}/publication?id=${subscription.publicationId}"><u>${subscription.publicationName}</u></a></div>
+                <div class="col-2 themed-grid-col">${subscription.startDate}</div>
+                <div class="col-2 themed-grid-col">${subscription.endDate}</div>
+                <div class="col-2 themed-grid-col">${subscription.price}$</div>
+                <div class="col-2 themed-grid-col">${subscription.period.name}</div>
+                <div class="col-1 themed-grid-col">
+                    <a class="btn btn-sm ml-1 btn-outline-secondary" href="${contextPath}/account">cancel</a>
+                </div>
+            </div>
+        </c:forEach>
+    </div>
 
 </div>
 <%@ include file = "static/templates/footer.html" %>
+
+<div class="modal fade" id="replenishModal" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <h5 class="modal-title m-2">Replenish your account</h5>
+            <form action="${contextPath}/account" method="post">
+                <div class="input-group m-1 p-2">
+                    <input type="number" class="form-control" placeholder="$ Amount" name="amount" step="0.01" min=0>
+                    <div class="input-group-append">
+                        <button class="btn btn-outline-secondary" type="submit" id="button-addon2">Button</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
 
 <script
         src="https://code.jquery.com/jquery-3.6.0.min.js"

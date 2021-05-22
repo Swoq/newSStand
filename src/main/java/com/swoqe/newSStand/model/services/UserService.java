@@ -122,4 +122,32 @@ public class UserService {
         }
         return Optional.empty();
     }
+
+    public void updateUser(User user) {
+        String UPDATE_USER_SQL = "update users set " +
+                "first_name=?, last_name=?, " +
+                "password=?, role=?, " +
+                "locked=?, enable=?, " +
+                "email=?, account=? " +
+                "where id=? ";
+        try(
+                Connection connection = DBCPDataSource.getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(UPDATE_USER_SQL)
+        ){
+            preparedStatement.setString(1, user.getFirstName());
+            preparedStatement.setString(2, user.getLastName());
+            preparedStatement.setString(3, user.getPassword());
+            preparedStatement.setString(4, user.getUserRole().toString());
+            preparedStatement.setBoolean(5, user.isLocked());
+            preparedStatement.setBoolean(6, user.isEnable());
+            preparedStatement.setString(7, user.getEmail());
+            preparedStatement.setBigDecimal(8, user.getAccount());
+            preparedStatement.setLong(9, user.getId());
+
+            preparedStatement.executeUpdate();
+            logger.info("DB | User was updated: {}", user);
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+    }
 }

@@ -30,7 +30,7 @@ public class SecurityFilter implements Filter {
 
         boolean validSession = (session != null) && (session.getAttribute("user") != null);
         boolean requestedAllowedURI = (uri.endsWith("/") || uri.endsWith("login") || uri.endsWith("registration")
-                || uri.endsWith("catalog") || uri.startsWith("/layouts/static"));
+                || uri.endsWith("catalog") || uri.startsWith("/layouts/static") || uri.startsWith("/publication"));
 
         if(!validSession && !requestedAllowedURI){
             logger.error("Unauthorized access request");

@@ -121,12 +121,12 @@
                             </div>
                             <div class="media-body">
                                 <h6 class="media-title font-weight-semibold">
-                                    <a href="#" data-abc="true">${item.name}</a>
+                                    <a href="${contextPath}/publication?id=${item.id}" data-abc="true">${item.name}</a>
                                 </h6>
                                 <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
                                     <c:forEach var="genre" items="${item.genres}">
                                         <li class="list-inline-item">
-                                            <a href="${contextPath}/catalog$genre=${genre.name}" class="text-muted"
+                                            <a href="${contextPath}/catalog?genres%5B%5D=${genre.id}" class="text-muted"
                                                data-abc="true">${genre.name}</a>
                                         </li>
                                     </c:forEach>
@@ -143,9 +143,9 @@
                                     <i class="fa fa-star"></i> <i class="fa fa-star"></i>
                                 </div>
                                 <div class="text-muted">1985 reviews</div>
-                                <button type="button" class="btn btn-dark mt-4 text-white">
+                                <a type="button" class="btn btn-dark mt-4 text-white" href="${contextPath}/publication?id=${item.id}">
                                     subscribe
-                                </button>
+                                </a>
                             </div>
                         </div>
                     </div>
