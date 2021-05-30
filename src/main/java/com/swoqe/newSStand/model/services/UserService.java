@@ -123,6 +123,37 @@ public class UserService {
         return Optional.empty();
     }
 
+    public Optional<User> getUserByEmail(String email){
+        String GET_USER_BY_EMAIL_SQL = "SELECT id, first_name, last_name, password, role, locked, enable, email, account " +
+                "from users where email=?";
+        try (
+                Connection connection = ConnectionPool.getInstance().getConnection();
+                PreparedStatement preparedStatement = connection.prepareStatement(GET_USER_BY_EMAIL_SQL)
+        ){
+            preparedStatement.setString(1, email);
+            try(ResultSet resultSet = preparedStatement.executeQuery()) {
+                if (!resultSet.next())
+                    return Optional.empty();
+                User user = new User();
+                user.setId(resultSet.getLong("id"));
+                user.setFirstName(resultSet.getString("first_name"));
+                user.setLastName(resultSet.getString("last_name"));
+                user.setPassword(resultSet.getString("password"));
+                user.setUserRole(UserRole.valueOf(resultSet.getString("role")));
+                user.setLocked(resultSet.getBoolean("locked"));
+                user.setEnable(resultSet.getBoolean("enable"));
+                user.setEmail(resultSet.getString("email"));
+                user.setAccount(resultSet.getBigDecimal("account"));
+
+                logger.info("DB | User with email: {} was found ", email);
+                return Optional.of(user);
+            }
+        } catch (SQLException e) {
+            logger.error(e);
+        }
+        return Optional.empty();
+    }
+
     public void updateUser(User user) {
         String UPDATE_USER_SQL = "update users set " +
                 "first_name=?, last_name=?, " +

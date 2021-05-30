@@ -1,5 +1,7 @@
 package com.swoqe.newSStand.controllers.filters;
 
+import com.swoqe.newSStand.model.entity.User;
+import com.swoqe.newSStand.model.entity.UserRole;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -31,12 +33,27 @@ public class SecurityFilter implements Filter {
         boolean validSession = (session != null) && (session.getAttribute("user") != null);
         boolean requestedAllowedURI = (uri.endsWith("/") || uri.endsWith("login") || uri.endsWith("registration")
                 || uri.endsWith("catalog") || uri.startsWith("/layouts/static") || uri.startsWith("/publication"));
+        boolean requestedAdminURI = (uri.startsWith("/users")) || uri.startsWith("/genres") || uri.startsWith("/periods")
+                || uri.startsWith("/subscriptions") || uri.equals("/catalog/add");
 
-        if(!validSession && !requestedAllowedURI){
+
+        if(!validSession && !requestedAllowedURI ){
             logger.error("Unauthorized access request");
             res.sendRedirect("/login");
         }else{
-            filterChain.doFilter(req, res);
+            if(requestedAdminURI && validSession){
+                User user = (User) session.getAttribute("user");
+                UserRole userRole = user.getUserRole();
+                if(!userRole.equals(UserRole.ADMIN)) {
+                    logger.error("Unauthorized access request");
+                    res.sendRedirect("/login");
+                }
+                else
+                    filterChain.doFilter(req, res);
+            }
+            else
+                filterChain.doFilter(req, res);
+
         }
     }
 

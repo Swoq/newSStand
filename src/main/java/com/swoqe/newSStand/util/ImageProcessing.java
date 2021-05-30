@@ -14,10 +14,7 @@ public class ImageProcessing {
         String path = realPath + File.separator + UPLOAD_DIRECTORY + File.separator + fileName;
         File file = new File(path);
         try {
-            if(file.createNewFile())
-                logger.info("File was created at: {}", file);
-            else
-                logger.info("File has already created: {}", file);
+            file.createNewFile();
         } catch (IOException e) {
             e.printStackTrace();
         }

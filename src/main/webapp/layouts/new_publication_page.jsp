@@ -18,8 +18,6 @@
             margin: 0 auto;
             padding: 30px 0;
         }
-
-
     </style>
 
 
@@ -37,14 +35,16 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Title</span>
                 </div>
-                <input type="text" class="form-control" name="title" aria-describedby="basic-addon1" value="${requestScope.prevTitle}">
+                <input value="${requestScope.publication.name}"
+                       type="text" class="form-control" name="title" required>
             </div>
 <%--            Publisher--%>
             <div class="input-group mb-3">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon2">Publisher</span>
                 </div>
-                <input type="text" class="form-control" name="publisher" aria-describedby="basic-addon2" value="${requestScope.prevPublisher}">
+                <input value="${requestScope.publication.publisher}"
+                       type="text" class="form-control" name="publisher" required>
             </div>
 
 <%--    Genres Multiselect--%>
@@ -66,7 +66,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon3">Publ. date</span>
                 </div>
-                <input type="date" class="form-control mr-2" name="publication_date" placeholder="Username" aria-label="Username" aria-describedby="basic-addon1">
+                <input value="${requestScope.publication.publicationDate.toString()}"
+                       type="date" class="form-control mr-2" name="publication_date" placeholder="Date">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Cover</span>
                 </div>
@@ -81,7 +82,7 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Description</span>
                 </div>
-                <textarea class="form-control" name="description" aria-label="With textarea" >${requestScope.prevDescription}</textarea>
+                <textarea class="form-control" name="description">${requestScope.publication.description}</textarea>
             </div>
 
 <%--            Period and price--%>
@@ -102,10 +103,8 @@
 
 
 <!-- HIDDEN DYNAMIC ELEMENT TO CLONE -->
-<!-- you can replace it with any other elements -->
 <div class="form-group dynamic-element" style="display:none">
     <div class="row d-flex flex-row justify-content-center">
-        <!-- Replace these fields -->
         <div class="col-md-4">
             <div class="input-group mb-3 my-auto">
                 <input type="number" name="prices" class="form-control" placeholder="Price" aria-label="Username" aria-describedby="basic-addon1">

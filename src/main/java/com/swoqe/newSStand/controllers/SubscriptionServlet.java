@@ -38,7 +38,7 @@ public class SubscriptionServlet extends HttpServlet {
                 this.doSubscriptionsDelete(req, resp);
                 break;
             default:
-                resp.sendRedirect("/");
+                resp.sendError(HttpServletResponse.SC_NOT_FOUND);
                 break;
         }
     }

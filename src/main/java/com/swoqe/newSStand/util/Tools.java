@@ -1,6 +1,5 @@
 package com.swoqe.newSStand.util;
 
-import com.swoqe.newSStand.controllers.AddPublicationServlet;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 

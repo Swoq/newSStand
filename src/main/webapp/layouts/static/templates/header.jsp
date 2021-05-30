@@ -165,19 +165,19 @@
                         </div>
                     </form>
 
-                    <form action="#" method="get">
+                    <form action="${contextPath}/users/block" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="<fmt:message key="admin.panel.placeholder.emailToBlock"/>" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control" name="email" placeholder="<fmt:message key="admin.panel.placeholder.emailToBlock"/>" aria-label="Recipient's username" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button"><fmt:message key="admin.panel.placeholder.blockBtn"/></button>
+                                <button class="btn btn-outline-secondary" type="submit"><fmt:message key="admin.panel.placeholder.blockBtn"/></button>
                             </div>
                         </div>
                     </form>
-                    <form action="#" method="get">
+                    <form action="${contextPath}/users/unblock" method="post">
                         <div class="input-group mb-3">
-                            <input type="text" class="form-control" placeholder="<fmt:message key="admin.panel.placeholder.emailToUnblock"/>" aria-label="Recipient's username" aria-describedby="basic-addon2">
+                            <input type="text" class="form-control" name="email" placeholder="<fmt:message key="admin.panel.placeholder.emailToUnblock"/>" aria-label="Recipient's username" aria-describedby="basic-addon2">
                             <div class="input-group-append">
-                                <button class="btn btn-outline-secondary" type="button"><fmt:message key="admin.panel.placeholder.unblockBtn"/></button>
+                                <button class="btn btn-outline-secondary" type="submit"><fmt:message key="admin.panel.placeholder.unblockBtn"/></button>
                             </div>
                         </div>
 
@@ -191,7 +191,6 @@
         </div>
     </div>
 </div>
-
 
 <script>
 

@@ -2,6 +2,7 @@ package com.swoqe.newSStand.controllers.filters;
 
 import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.Period;
+import com.swoqe.newSStand.model.entity.PeriodicalPublication;
 import com.swoqe.newSStand.model.services.GenreService;
 import com.swoqe.newSStand.model.services.PeriodService;
 import org.apache.logging.log4j.LogManager;
@@ -18,7 +19,7 @@ import java.time.LocalDate;
 import java.time.format.DateTimeParseException;
 import java.util.List;
 
-@WebFilter(filterName = "NewPublicationFilter", urlPatterns = {"/catalog/add"})
+@WebFilter(filterName = "NewPublicationFilter", urlPatterns = {"/catalog/add", "/catalog/edit"})
 public class NewPublicationFilter implements Filter {
     final static Logger logger = LogManager.getLogger(NewPublicationFilter.class);
 
@@ -64,9 +65,17 @@ public class NewPublicationFilter implements Filter {
                 req.setAttribute("periods", allPeriods);
                 req.setAttribute("genres", allGenres);
                 req.setAttribute("errMsg", errorMsg);
-                req.setAttribute("prevTitle", title);
-                req.setAttribute("prevPublisher", publisher);
-                req.setAttribute("prevDescription", description);
+                PeriodicalPublication publication = new PeriodicalPublication.PublicationBuilder()
+                        .withName(title)
+                        .withPublisher(publisher)
+                        .withDescription(description)
+                        .withPublicationDate(parsedDate)
+                        .build();
+                req.setAttribute("publication", publication);
+                req.setAttribute("prevPeriods", periods);
+                req.setAttribute("prevPeriods", prices);
+                req.setAttribute("prevPeriods", genres);
+
                 rd.include(req, resp);
             }
             else {

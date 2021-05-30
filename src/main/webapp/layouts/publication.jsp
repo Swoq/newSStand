@@ -1,5 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ page import="com.swoqe.newSStand.model.entity.UserRole" %>
 <c:set var="contextPath" value="${pageContext.request.contextPath}" />
 
 <html>
@@ -28,7 +29,11 @@
                          class="cover_img " width="300" height="300" alt="">
                 </div>
                 <div class="pricing-header pl-3">
-                    <p class="text-muted" style="text-align: end; margin-bottom: 0">Dated: ${requestScope.publication.publicationDate}</p>
+                    <p class="text-muted" style="text-align: end; margin-bottom: 0">Dated: ${requestScope.publication.publicationDate}
+                        <c:if test="${sessionScope.user.userRole.equals(UserRole.ADMIN)}">
+                            <a href="${contextPath}/catalog/edit" class="fa fa-pencil" aria-hidden="true"></a>
+                        </c:if>
+                    </p>
                     <h1 class="display-4">${requestScope.publication.name}</h1>
                     <hr/>
                     <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">

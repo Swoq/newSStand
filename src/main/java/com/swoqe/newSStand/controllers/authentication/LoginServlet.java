@@ -34,7 +34,7 @@ public class LoginServlet extends HttpServlet {
         String encodedPassword = PasswordEncoder.hashPassword(password);
         Optional<User> optionalUser = userService.getUserByEmailAndPassword(email, encodedPassword);
 
-        if (optionalUser.isPresent()) {
+        if (optionalUser.isPresent() && !optionalUser.get().isLocked()) {
             HttpSession session = req.getSession();
             session.setAttribute("user", optionalUser.get());
 
@@ -51,7 +51,10 @@ public class LoginServlet extends HttpServlet {
             resp.sendRedirect(encodedURL);
         } else {
             RequestDispatcher rd = req.getRequestDispatcher("layouts/login.jsp");
-            req.setAttribute("errMsg", "Email or password is wrong");
+            if (optionalUser.isPresent())
+                req.setAttribute("errMsg", "Sorry, this account is blocked. Contact us to find details.");
+            else
+                req.setAttribute("errMsg", "Email or password is wrong");
             rd.include(req, resp);
         }
 
