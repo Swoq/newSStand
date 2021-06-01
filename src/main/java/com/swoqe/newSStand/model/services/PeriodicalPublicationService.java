@@ -2,6 +2,7 @@ package com.swoqe.newSStand.model.services;
 
 import com.swoqe.newSStand.model.entity.Genre;
 import com.swoqe.newSStand.model.entity.PeriodicalPublication;
+import com.swoqe.newSStand.model.entity.Rate;
 import com.swoqe.newSStand.util.*;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -23,6 +24,10 @@ public class PeriodicalPublicationService {
     private final String ADD_PUBLICATION = "INSERT INTO periodical_publications " +
             "(id, name, publication_date, cover_img, publisher, img_name, description) " +
             "values (DEFAULT, ?, ?, ?, ?, ?, ?)";
+
+    private final String UPDATE_PUBLICATION = "UPDATE periodical_publications " +
+            "SET name=?, publication_date=?, cover_img=?, publisher=?, img_name=?, description=? " +
+            "WHERE id=? ";
 
     private final String GET_PUBLICATIONS_BY_NAME = "select publications.*, t.price, p.name as period_name, count(*) OVER() AS total_count\n" +
             "from publication_periods pp\n" +
@@ -83,7 +88,7 @@ public class PeriodicalPublicationService {
                     ps.setString(5, img.getName());
                     ps.executeUpdate();
                 } catch (IOException e) {
-                    e.printStackTrace();
+                    logger.error(e);
                 }
             }
             else{
@@ -100,7 +105,6 @@ public class PeriodicalPublicationService {
             this.genreService.insertPublicationGenres(publication);
         } catch (SQLException e){
             logger.error(e);
-            e.printStackTrace();
         }
     }
 
@@ -234,6 +238,63 @@ public class PeriodicalPublicationService {
         return new PublicationsWrapper(publications, totalAmount);
     }
 
+    public void updatePublication(PeriodicalPublication publication) {
+        Connection connection = ConnectionPool.getInstance().getConnection();
+        try(
+                PreparedStatement ps = connection.prepareStatement(UPDATE_PUBLICATION)
+        ){
+            connection.setAutoCommit(false);
+
+            ps.setString(1, publication.getName());
+            ps.setDate(2, Date.valueOf(publication.getPublicationDate()));
+            ps.setString(4, publication.getPublisher());
+            ps.setString(6, publication.getDescription());
+            ps.setLong(7, publication.getId());
+
+            Optional<File> optionalFile = Optional.ofNullable(publication.getCoverImg());
+            if(optionalFile.isPresent()){
+                File img = optionalFile.get();
+                try(FileInputStream fileInputStream = new FileInputStream(img)){
+                    ps.setBinaryStream(3, fileInputStream, (int) img.length());
+                    ps.setString(5, img.getName());
+                    ps.executeUpdate();
+                } catch (IOException e) {
+                    logger.error(e);
+                }
+            }
+            else{
+                ps.setNull(3, Types.VARCHAR);
+                ps.setNull(5, Types.VARCHAR);
+                ps.executeUpdate();
+            }
+//            TO DO Fix duplicated
+            List<Rate> rates = this.periodService.getRatesByPublicationId(publication.getId());
+            List<String> toRemove = new ArrayList<>();
+            for(Map.Entry<String, BigDecimal> entry : publication.getPricesPerPeriods().entrySet()){
+                for (Rate rate : rates){
+                    if (entry.getKey().equals(rate.getPeriod().getName()))
+                        toRemove.add(entry.getKey());
+                }
+            }
+            for (String str : toRemove)
+                publication.getPricesPerPeriods().remove(str);
+
+            this.genreService.deletePublicationGenres(publication);
+
+            this.periodService.insertPublicationPeriods(publication);
+            this.genreService.insertPublicationGenres(publication);
+            connection.commit();
+        } catch (SQLException e){
+            try {
+                logger.error("Transaction is being rolled back");
+                connection.rollback();
+                connection.close();
+            } catch (SQLException excep) {
+                logger.error(excep);
+            }
+            logger.error(e);
+        }
+    }
 
 
     public static class PublicationsWrapper{

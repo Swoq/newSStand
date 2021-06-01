@@ -109,12 +109,58 @@ public class PublicationProcessingServlet extends HttpServlet {
 
     }
 
-    private void deletePublicationPost(HttpServletRequest req, HttpServletResponse resp) {
+    private void deletePublicationPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        String id = req.getParameter("id");
+        Long lId = null;
+        try{
+            lId = Long.parseLong(id);
+        }
+        catch (NumberFormatException | NullPointerException exception){
+            logger.error(exception);
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
 
     }
 
-    private void editPublicationPost(HttpServletRequest req, HttpServletResponse resp) {
+    private void editPublicationPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+//        TO DO Image transfer
+        String id = req.getParameter("id");
+        Optional<PeriodicalPublication> optional = Optional.empty();
+        Long lId = null;
+        try{
+            lId = Long.parseLong(id);
+            optional = publicationService.getPublicationById(lId, req.getServletContext().getRealPath(""));
+        }
+        catch (NumberFormatException | NullPointerException exception){
+            logger.error(exception);
+            resp.sendError(HttpServletResponse.SC_NOT_FOUND);
+        }
+        File file = null;
+        String title = req.getParameter("title");
+        String publisher = req.getParameter("publisher");
+        LocalDate publishingDate = LocalDate.parse(req.getParameter("publication_date"));
+        String description = req.getParameter("description");
+        String[] periods = req.getParameterValues("periods");
+        String[] prices = req.getParameterValues("prices");
+        String[] genres = req.getParameterValues("genres");
 
+        if (optional.isPresent()){
+            file = optional.get().getCoverImg();
+            List<Genre> genresEntities = genreService.getGenresByNames(genres);
+            PeriodicalPublication publication = new PeriodicalPublication.PublicationBuilder()
+                    .withId(lId)
+                    .withName(title)
+                    .withPublisher(publisher)
+                    .withPublicationDate(publishingDate)
+                    .withDescription(description)
+                    .withCoverImg(file)
+                    .withGenres(genresEntities)
+                    .withPricesMap(Tools.toHashMap(periods, prices))
+                    .build();
+            publicationService.updatePublication(publication);
+        }
+
+        resp.sendRedirect("/catalog");
     }
 
     private void addPublicationPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {

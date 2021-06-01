@@ -21,7 +21,7 @@ public class PeriodService {
 
     private final String ADD_NEW_PERIOD = "insert into periods(name, description) VALUES (?, ?)";
 
-    private final String ADD_PERIOD_BY_ID = "insert into publication_periods(id, period_id, publication_id, price) " +
+    private final String ADD_PERIOD = "insert into publication_periods(id, period_id, publication_id, price) " +
             "values (default, ?, ?, ?)";
 
     private final String GET_PERIOD_BY_NAME = "select id, name, description from periods where name=?";
@@ -81,7 +81,7 @@ public class PeriodService {
     public void insertPublicationPeriods(PeriodicalPublication publication){
         try(
                 Connection connection = ConnectionPool.getInstance().getConnection();
-                PreparedStatement ps = connection.prepareStatement(ADD_PERIOD_BY_ID)
+                PreparedStatement ps = connection.prepareStatement(ADD_PERIOD)
         ){
             Map<String, BigDecimal> periodsPrices = publication.getPricesPerPeriods();
             periodsPrices.forEach((k, v) -> {
@@ -218,4 +218,19 @@ public class PeriodService {
         }
         return optionalPeriod;
     }
+
+    public void deletePublicationPeriods(PeriodicalPublication publication) {
+        String delete_sql = "delete from publication_periods where publication_id=? ";
+        try(
+                Connection connection = ConnectionPool.getInstance().getConnection();
+                PreparedStatement ps = connection.prepareStatement(delete_sql)
+        ){
+            ps.setLong(1, publication.getId());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            logger.error(e);
+        }
+    }
+
+
 }

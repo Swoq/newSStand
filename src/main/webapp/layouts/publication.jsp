@@ -5,19 +5,13 @@
 
 <html>
 <head>
-    <title>Account</title>
+    <title>Publication</title>
     <link href="${pageContext.request.contextPath}/layouts/static/styles/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
     <link href="${contextPath}/layouts/static/styles/pricing.css" rel="stylesheet">
-    <style>
-        .cover_img {
-            width: 350px;
-            height: 30vw;
-            object-fit: cover;
-        }
-    </style>
+    <link href="${contextPath}/layouts/static/styles/publication.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">
@@ -31,7 +25,7 @@
                 <div class="pricing-header pl-3">
                     <p class="text-muted" style="text-align: end; margin-bottom: 0">Dated: ${requestScope.publication.publicationDate}
                         <c:if test="${sessionScope.user.userRole.equals(UserRole.ADMIN)}">
-                            <a href="${contextPath}/catalog/edit" class="fa fa-pencil" aria-hidden="true"></a>
+                            <a href="${contextPath}/catalog/edit?id=${requestScope.publication.id}" class="fa fa-pencil" aria-hidden="true"></a>
                         </c:if>
                     </p>
                     <h1 class="display-4">${requestScope.publication.name}</h1>
@@ -39,7 +33,7 @@
                     <ul class="list-inline list-inline-dotted mb-3 mb-lg-2">
                         <c:forEach var="genre" items="${requestScope.publication.genres}">
                             <li class="list-inline-item">
-                                <a href="${contextPath}/catalog$genre=${genre.name}" class="text-muted"
+                                <a href="${contextPath}/catalog?genres%5B%5D=${genre.id}" class="text-muted"
                                    data-abc="true">${genre.name}</a>
                             </li>
                         </c:forEach>
@@ -113,19 +107,9 @@
     </div>
 </div>
 
-<script
-        src="https://code.jquery.com/jquery-3.6.0.min.js"
-        integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4="
-        crossorigin="anonymous"></script>
-<script src="<c:url value="layouts/static/js/bootstrap.bundle.min.js" />"></script>
-
-<script>
-    $('#exampleModal').on('show.bs.modal', function (event) {
-        let button = $(event.relatedTarget)
-        let rateId = button.data('rate')
-        let modal = $(this)
-        modal.find('#hiddenRateInput').attr("value", rateId);
-    })
-</script>
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="${contextPath}/layouts/static/js/publication.js"></script>
 </body>
 </html>

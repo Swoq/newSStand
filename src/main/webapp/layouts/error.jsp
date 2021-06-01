@@ -6,17 +6,13 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>404 Error</title>
+    <title>Error</title>
 
     <link href="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet" id="bootstrap-css">
     <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
 
-    <style>
-        #main {
-            height: 100vh;
-        }
-    </style>
+    <link href="${contextPath}/layouts/static/styles/error.css" rel="stylesheet">
 </head>
 <body>
 <div class="container">

@@ -127,4 +127,17 @@ public class GenreService {
     }
 
 
+    public void deletePublicationGenres(PeriodicalPublication publication) {
+        String delete_sql = "delete from publication_genre where publication_id=? ";
+        try(
+                Connection connection = ConnectionPool.getInstance().getConnection();
+                PreparedStatement ps = connection.prepareStatement(delete_sql)
+        ){
+
+            ps.setLong(1, publication.getId());
+            ps.executeUpdate();
+        } catch (SQLException e){
+            logger.error(e);
+        }
+    }
 }

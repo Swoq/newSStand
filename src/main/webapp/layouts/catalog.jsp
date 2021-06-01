@@ -7,53 +7,18 @@
 <head>
     <title>Catalog</title>
     <link rel="canonical" href="https://getbootstrap.com/docs/4.6/examples/blog/">
-<%--    <link href="${contextPath}/layouts/static/styles/bootstrap.min.css" rel="stylesheet">--%>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/css/bootstrap.min.css" integrity="sha384-B0vP5xmATw1+K9KRQjQERJvTumQW0nPEzvF6L/Z6nronJ3oUOFUFpCjEUQouq2+l" crossorigin="anonymous">
-
-    <style>
-        body {
-            margin: 0;
-            background-color: #f5f5f5
-        }
-
-        .mt-50 {
-            margin-top: 50px
-        }
-
-        .mb-50 {
-            margin-bottom: 50px
-        }
-
-        a {
-            text-decoration: none !important
-        }
-
-        .description {
-            overflow: hidden;
-            text-overflow: ellipsis;
-            display: -webkit-box;
-            -webkit-line-clamp: 5;
-            -webkit-box-orient: vertical;
-        }
-
-        .cover_img {
-            width: 175px;
-            height: 15vw;
-            object-fit: cover;
-        }
-
-    </style>
     <link href="https://fonts.googleapis.com/css?family=Playfair&#43;Display:700,900" rel="stylesheet">
     <link href="${contextPath}/layouts/static/styles/blog.css" rel="stylesheet">
+    <link href="${contextPath}/layouts/static/styles/new_catalog.css" rel="stylesheet">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@1.0.0/dist/css/BsMultiSelect.bs4.min.css">
 
 </head>
 <body>
 <div class="container">
-    <%--    Footer--%>
     <%@ include file="static/templates/header.jsp" %>
-    <%--Content--%>
+
     <div class="container d-flex flex-column justify-content-center mt-50 mb-50">
         <form action="${contextPath}/catalog" method="get" class="mb-0">
             <div class="form-row">
@@ -114,7 +79,6 @@
 
         <div class="row">
             <div class="col-md-12">
-                <%--                Template--%>
                 <c:forEach var="item" items="${requestScope.publications}">
                     <div class="card card-body mt-3">
                         <div class="media align-items-center align-items-lg-start text-center text-lg-left flex-column flex-lg-row">
@@ -153,10 +117,9 @@
                         </div>
                     </div>
                 </c:forEach>
-                <%--    Template END--%>
             </div>
         </div>
-        <%--Pagination--%>
+
         <nav aria-label="Navigation for countries" class="mt-3 d-flex justify-content-center">
             <ul class="pagination">
                 <c:if test="${requestScope.currentPage != 1}">
@@ -192,26 +155,11 @@
 
 </div>
 <%@ include file="static/templates/footer.html" %>
+
 <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-Piv4xVNRyMGpqkS2by6br4gNJ7DXjqk09RmUpJ8jgGtD7zP9yug3goQfGII0yAns" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/@dashboardcode/bsmultiselect@1.0.0/dist/js/BsMultiSelect.bs4.min.js"></script>
-<script>
-    $(document).ready(function () {
-        $('#genreMultiSelect').bsMultiSelect();
-    });
-
-    $('#sortBy').on('change', function (e) {
-        let optionSelected = $("option:selected", this);
-        let valueSelected = this.value;
-        let dateBlock = $('#hiddenDate');
-        if (valueSelected === 'date_before' || valueSelected === 'date_after'){
-            dateBlock.removeAttr("disabled")
-        }
-        else {
-            dateBlock.attr("disabled", "disabled");
-        }
-
-    });
-</script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js" integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<script src="${contextPath}/layouts/static/js/BsMultiSelect.js"></script>
+<script src="${contextPath}/layouts/static/js/catalog.js"></script>
 </body>
 </html>
