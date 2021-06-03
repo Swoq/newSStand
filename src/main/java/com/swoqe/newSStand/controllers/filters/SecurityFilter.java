@@ -34,7 +34,7 @@ public class SecurityFilter implements Filter {
         boolean requestedAllowedURI = (uri.endsWith("/") || uri.endsWith("login") || uri.endsWith("registration")
                 || uri.endsWith("catalog") || uri.startsWith("/layouts/static") || uri.startsWith("/publication"));
         boolean requestedAdminURI = (uri.startsWith("/users")) || uri.startsWith("/genres") || uri.startsWith("/periods")
-                || uri.startsWith("/subscriptions") || uri.equals("/catalog/add");
+                || uri.equals("/catalog/add") || uri.equals("/catalog/edit") || uri.equals("/catalog/delete");
 
 
         if(!validSession && !requestedAllowedURI ){
