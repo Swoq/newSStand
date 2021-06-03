@@ -15,3 +15,6 @@ time to subscribe to the publication.
 The system administrator has the rights to:
 - adding, deleting and editing publications;
 - blocking, unlocking the user.
+
+## DB structure:
+![Header Image](/src/main/resources/static//db_view.jpeg?raw=true)
